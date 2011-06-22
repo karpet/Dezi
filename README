@@ -1,6 +1,6 @@
 Dezi
 
-Dezi is a search platform based on Apache Lucy, Swish3 and Search::OpenSearch.
+Dezi is a search platform based on Apache Lucy, Swish3, Plack and Search::OpenSearch.
 Dezi integrates several search toolkits into an easy-to-use server.
 
 INSTALLATION

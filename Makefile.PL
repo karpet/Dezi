@@ -1,19 +1,25 @@
 use strict;
 use warnings;
-use ExtUtils::MakeMaker;
+use inc::Module::Install;
+use 5.008003;
+
+name 'Dezi';
+all_from 'lib/Dezi.pm';
+requires 'Test::More'                       => 0;
+requires 'Search::Query::Dialect::Lucy'     => 0.01;
+requires 'Lucy'                             => 0.001000;
+requires 'Search::OpenSearch::Engine::Lucy' => 0.01;
+requires 'Plack'                            => 0;
+
+perl_version '5.8.3';
+license 'http://dev.perl.org/licenses/';
+homepage 'https://github.com/karpet/Dezi';
+bugtracker 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=Dezi';
+repository 'git://github.com/karpet/Dezi.git';
+install_script 'bin/dezi';
 
 WriteMakefile(
-    NAME                => 'Dezi',
-    AUTHOR              => q{Peter Karman <karman@cpan.org>},
-    VERSION_FROM        => 'lib/Dezi.pm',
-    ABSTRACT_FROM       => 'lib/Dezi.pm',
-    ($ExtUtils::MakeMaker::VERSION >= 6.3002
-      ? ('LICENSE'=> 'perl')
-      : ()),
-    PL_FILES            => {},
-    PREREQ_PM => {
-        'Test::More' => 0,
-    },
-    dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
-    clean               => { FILES => 'Dezi-*' },
+    PL_FILES => {},
+    dist     => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
+    clean => { FILES => 'Dezi-*' },
 );

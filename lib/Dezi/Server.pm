@@ -4,7 +4,7 @@ use strict;
 use Plack::Builder;
 use base 'Search::OpenSearch::Server::Plack';
 
-our $VERSION = '0.00100';
+our $VERSION = '0.001000';
 
 sub new {
     my ( $class, %args ) = @_;
@@ -13,7 +13,7 @@ sub new {
     my $engine_config = $args{engine_config} || {};
     $engine_config->{type} = 'Lucy';
     $engine_config->{index}  ||= ['dezi.index'];
-    $engine_config->{fields} ||= [qw( doc title body )];
+    $engine_config->{fields} ||= [qw( swishtitle swishdescription )];
     $args{engine_config} = $engine_config;
 
     return $class->SUPER::new(%args);
@@ -50,7 +50,8 @@ Add a document B<foo> to the index:
    
 Search the index:
 
- % curl 'http://localhost:5000/?q=bar'
+ % curl 'http://localhost:5000/?q=bar&format=json'
+ % curl 'http://localhost:5000/?q=bar&format=xml'
 
 =head1 DESCRIPTION
 
@@ -59,6 +60,23 @@ Search::OpenSearch and Search::Query.
 
 Dezi integrates several CPAN search libraries into one
 easy-to-use interface.
+
+=head1 METHODS
+
+Dezi::Server is a subclass of Search::OpenSearch::Server::Plack.
+It isa Plack::Middleware. Only new methods are overridden.
+
+=head2 new([ engine_config => $config_hashref ])
+
+Returns an instance of the server.
+
+=head2 app( I<opts> )
+
+The Plack::Builder construction, class method. Called within the Plack
+server. Override this method in a subclass to change the basic application
+definition.
+
+=cut
 
 =head1 AUTHOR
 
@@ -109,5 +127,9 @@ by the Free Software Foundation; or the Artistic License.
 
 See http://dev.perl.org/licenses/ for more information.
 
+=head1 SEE ALSO
+
+L<Search::OpenSearch>, L<SWISH::3>, L<SWISH::Prog::Lucy>,
+L<Plack>, L<Lucy>
 
 =cut

@@ -3,6 +3,8 @@ MANIFEST
 Makefile.PL
 README
 lib/Dezi.pm
+lib/Dezi/Server.pm
+bin/dezi
 t/00-load.t
 t/pod-coverage.t
 t/pod.t

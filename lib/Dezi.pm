@@ -2,7 +2,7 @@ package Dezi;
 use warnings;
 use strict;
 
-our $VERSION = '0.00100';
+our $VERSION = '0.001000';
 
 1;
 
@@ -10,7 +10,7 @@ __END__
 
 =head1 NAME
 
-Dezi - search platform based on Apache Lucy, Swish3 and Starman
+Dezi - search platform based on Apache Lucy, Swish3, Search::OpenSearch and Plack
 
 =head1 SYNOPSIS
 
@@ -26,7 +26,8 @@ Add a document B<foo> to the index:
    
 Search the index:
 
- % curl 'http://localhost:5000/?q=bar'
+ % curl 'http://localhost:5000/?q=bar&format=json'
+ % curl 'http://localhost:5000/?q=bar&format=xml'
 
 =head1 DESCRIPTION
 
@@ -45,9 +46,6 @@ Peter Karman, C<< <karman at cpan.org> >>
 Please report any bugs or feature requests to C<bug-dezi at rt.cpan.org>, or through
 the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Dezi>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
-
-
-
 
 =head1 SUPPORT
 
@@ -78,10 +76,6 @@ L<http://search.cpan.org/dist/Dezi/>
 
 =back
 
-
-=head1 ACKNOWLEDGEMENTS
-
-
 =head1 COPYRIGHT & LICENSE
 
 Copyright 2011 Peter Karman.
@@ -92,5 +86,9 @@ by the Free Software Foundation; or the Artistic License.
 
 See http://dev.perl.org/licenses/ for more information.
 
+=head1 SEE ALSO
+
+L<Search::OpenSearch>, L<SWISH::3>, L<SWISH::Prog::Lucy>,
+L<Plack>, L<Lucy>
 
 =cut
