@@ -1,12 +1,7 @@
 package Dezi::Server;
 use warnings;
 use strict;
-use Plack::Request;
-
-#use Plack::App::URLMap;
-#use Plack::App::File;
 use Plack::Builder;
-use Search::OpenSearch;
 use base 'Search::OpenSearch::Server::Plack';
 
 our $VERSION = '0.00100';
@@ -16,7 +11,7 @@ sub new {
 
     # default engine config
     my $engine_config = $args{engine_config} || {};
-    $engine_config->{type} = 'KSx';
+    $engine_config->{type} = 'Lucy';
     $engine_config->{index}  ||= ['dezi.index'];
     $engine_config->{fields} ||= [qw( doc title body )];
     $args{engine_config} = $engine_config;
@@ -28,16 +23,11 @@ sub app {
     my ( $class, %opts ) = @_;
 
     builder {
-
-        enable 'HTTPExceptions';
-        enable 'StackTrace', no_print_errors => 1;
-        enable "Plack::Middleware::AccessLog::Timed", format => "combined";
-
-        # serve dynamic content using MyServer
         mount '/' => $class->new(%opts);
     };
 
 }
+
 1;
 
 __END__
@@ -80,9 +70,6 @@ Please report any bugs or feature requests to C<bug-dezi at rt.cpan.org>, or thr
 the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Dezi>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
-
-
-
 =head1 SUPPORT
 
 You can find documentation for this module with the perldoc command.
@@ -111,10 +98,6 @@ L<http://cpanratings.perl.org/d/Dezi>
 L<http://search.cpan.org/dist/Dezi/>
 
 =back
-
-
-=head1 ACKNOWLEDGEMENTS
-
 
 =head1 COPYRIGHT & LICENSE
 

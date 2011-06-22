@@ -2,9 +2,7 @@
 
 use warnings;
 use strict;
-use Dezi::Server;
 use Plack::Runner;
-use Data::Dump qw( dump );
 
 our $VERSION = '0.00100';
 
@@ -14,16 +12,21 @@ sub version {
 
 my $preload_app;
 my $dezi_config_file;
+my $server_class = 'Dezi::Server';
 
 require Getopt::Long;
 Getopt::Long::Configure( "no_ignore_case", "no_auto_abbrev", "pass_through" );
 Getopt::Long::GetOptions(
-    "preload-app" => \$preload_app,
-    "dezi-config" => \$dezi_config_file
+    "preload-app"  => \$preload_app,
+    "dezi-config"  => \$dezi_config_file,
+    "server-class" => \$server_class,
 );
 
-my @args
-    = ( server => 'Starman', env => 'deployment', version_cb => \&version );
+my @args = (
+
+    #env        => 'deployment',
+    version_cb => \&version
+);
 if ( !$preload_app ) {
     push @args, 'loader' => 'Delayed';
 }
@@ -33,7 +36,8 @@ if ($dezi_config_file) {
     $config = Config::Any->load_files( { files => [$dezi_config_file] } );
 }
 
-my $app = Dezi::Server->app( engine_config => $config );
+eval "use $server_class";
+my $app = $server_class->app( engine_config => $config );
 
 my @argv = @ARGV;
 
@@ -46,7 +50,7 @@ __END__
 
 =head1 NAME
 
-Dezi - search platform based on Apache Lucy, Swish3 and Starman
+Dezi - search platform based on Apache Lucy, Swish3 and Plack
 
 =head1 SYNOPSIS
 
@@ -66,7 +70,7 @@ Search the index:
 
 =head1 DESCRIPTION
 
-Dezi is a search platform based on Apache Lucy, Swish3,
+Dezi is a search platform based on Apache Lucy, Swish3, Plack,
 Search::OpenSearch and Search::Query. 
 
 Dezi integrates several CPAN search libraries into one
@@ -81,8 +85,6 @@ Peter Karman, C<< <karman at cpan.org> >>
 Please report any bugs or feature requests to C<bug-dezi at rt.cpan.org>, or through
 the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Dezi>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
-
-
 
 
 =head1 SUPPORT
@@ -117,6 +119,9 @@ L<http://search.cpan.org/dist/Dezi/>
 
 =head1 ACKNOWLEDGEMENTS
 
+Marvin Humphrey for a great library in Apache Lucy.
+
+The Plack community.
 
 =head1 COPYRIGHT & LICENSE
 
