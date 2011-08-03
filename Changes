@@ -3,4 +3,7 @@ Revision history for Dezi
 0.001000    21 June 2011
     * Initial release.
 
+0.001001    02 Aug  2011
+    * change url root to /search, reserving namespaces /index and /admin as well
+
 

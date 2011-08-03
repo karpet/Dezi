@@ -4,7 +4,7 @@ use strict;
 use Plack::Builder;
 use base 'Search::OpenSearch::Server::Plack';
 
-our $VERSION = '0.001000';
+our $VERSION = '0.001001';
 
 sub new {
     my ( $class, %args ) = @_;
@@ -23,7 +23,10 @@ sub app {
     my ( $class, %opts ) = @_;
 
     builder {
-        mount '/' => $class->new(%opts);
+        mount '/search' => $class->new(%opts);
+        mount '/index'  => $class->new(%opts);
+
+        # TODO /admin
     };
 
 }
