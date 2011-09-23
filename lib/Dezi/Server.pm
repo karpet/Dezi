@@ -11,9 +11,10 @@ sub new {
 
     # default engine config
     my $engine_config = $args{engine_config} || {};
-    $engine_config->{type} = 'Lucy';
+    $engine_config->{type}   ||= 'Lucy';
     $engine_config->{index}  ||= ['dezi.index'];
     $engine_config->{fields} ||= [qw( swishtitle swishdescription )];
+    $engine_config->{link}   ||= 'http://localhost:5000/search';
     $args{engine_config} = $engine_config;
 
     return $class->SUPER::new(%args);
@@ -47,14 +48,14 @@ Start the Dezi server, listening on port 5000:
 
 Add a document B<foo> to the index:
 
- % curl -XPOST http://localhost:5000/foo \
+ % curl -XPOST http://localhost:5000/index/foo \
    -d '<doc><title>bar</title>hello world</doc>' \
    -H 'Content-Type: application/xml'
    
 Search the index:
 
- % curl 'http://localhost:5000/?q=bar&format=json'
- % curl 'http://localhost:5000/?q=bar&format=xml'
+ % curl 'http://localhost:5000/search?q=bar&format=json'
+ % curl 'http://localhost:5000/search?q=bar&format=xml'
 
 =head1 DESCRIPTION
 
