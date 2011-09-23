@@ -4,7 +4,7 @@ use strict;
 use Plack::Builder;
 use base 'Search::OpenSearch::Server::Plack';
 
-our $VERSION = '0.001001';
+our $VERSION = '0.001002';
 
 sub new {
     my ( $class, %args ) = @_;
