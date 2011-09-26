@@ -4,7 +4,7 @@ use warnings;
 use strict;
 use Plack::Runner;
 
-our $VERSION = '0.00100';
+our $VERSION = '0.001002';
 
 sub version {
     print "$VERSION\n";
