@@ -22,7 +22,8 @@ sub new {
             swishdocsize
             )
     ];
-    $engine_config->{link} ||= 'http://localhost:5000/search';
+    my $search_path = delete $args{search_path};
+    $engine_config->{link} ||= 'http://localhost:5000' . $search_path;
     $engine_config->{default_response_format} ||= 'JSON';
     $args{engine_config} = $engine_config;
 
@@ -34,7 +35,7 @@ sub app {
 
     my $search_path = delete $opts{search_path} || '/search';
     my $index_path  = delete $opts{index_path}  || '/index';
-    my $app         = $class->new(%opts);
+    my $app = $class->new( %opts, search_path => $search_path );
 
     builder {
 
