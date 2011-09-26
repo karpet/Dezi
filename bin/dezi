@@ -18,8 +18,8 @@ require Getopt::Long;
 Getopt::Long::Configure( "no_ignore_case", "no_auto_abbrev", "pass_through" );
 Getopt::Long::GetOptions(
     "preload-app"  => \$preload_app,
-    "dezi-config"  => \$dezi_config_file,
-    "server-class" => \$server_class,
+    "dezi-config=s"  => \$dezi_config_file,
+    "server-class=s" => \$server_class,
 );
 
 my @args = (
@@ -33,7 +33,7 @@ if ( !$preload_app ) {
 my $config = {};
 if ($dezi_config_file) {
     require Config::Any;
-    $config = Config::Any->load_files( { files => [$dezi_config_file] } );
+    $config = Config::Any->load_files( { files => [$dezi_config_file], use_ext => 1 })->[0]->{$dezi_config_file};
 }
 
 eval "use $server_class";
