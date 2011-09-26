@@ -3,6 +3,8 @@ use warnings;
 use strict;
 use Plack::Builder;
 use base 'Search::OpenSearch::Server::Plack';
+use JSON;
+use Search::Tools::XML;
 
 our $VERSION = '0.001002';
 
@@ -13,8 +15,15 @@ sub new {
     my $engine_config = $args{engine_config} || {};
     $engine_config->{type}   ||= 'Lucy';
     $engine_config->{index}  ||= ['dezi.index'];
-    $engine_config->{fields} ||= [qw( swishtitle swishdescription )];
-    $engine_config->{link}   ||= 'http://localhost:5000/search';
+    $engine_config->{fields} ||= [
+        qw(
+            swishencoding
+            swishmime
+            swishdocsize
+            )
+    ];
+    $engine_config->{link} ||= 'http://localhost:5000/search';
+    $engine_config->{default_response_format} ||= 'JSON';
     $args{engine_config} = $engine_config;
 
     return $class->SUPER::new(%args);
@@ -23,9 +32,54 @@ sub new {
 sub app {
     my ( $class, %opts ) = @_;
 
+    my $search_path = delete $opts{search_path} || '/search';
+    my $index_path  = delete $opts{index_path}  || '/index';
+    my $app         = $class->new(%opts);
+
     builder {
-        mount '/search' => $class->new(%opts);
-        mount '/index'  => $class->new(%opts);
+
+        # right now these are identical
+        mount $search_path => $app;
+        mount $index_path  => $app;
+
+        # default is just self-description
+        mount '/' => sub {
+            my $req = Plack::Request->new(shift);
+            if ( $req->path ne '/' ) {
+                my $resp = 'Resource not found';
+                return [
+                    404,
+                    [   'Content-Type'   => 'text/plain',
+                        'Content-Length' => length $resp,
+                    ],
+                    [$resp]
+                ];
+            }
+            $app->setup_engine();
+            my $format = lc( $req->parameters->{format}
+                    || $app->engine->default_response_format );
+            my $uri = $req->uri;
+            $uri =~ s!/$!!;
+            my $about = {
+                search      => $uri . $search_path,
+                index       => $uri . $index_path,
+                description => 'This is a Dezi search server.',
+                version     => $VERSION,
+                fields      => $app->engine->fields,
+                facets      => $app->engine->facets,
+            };
+            my $resp
+                = $format eq 'json'
+                ? to_json($about)
+                : Search::Tools::XML->perl_to_xml( $about, 'dezi', 1 );
+            return [
+                200,
+                [   'Content-Type'   => 'application/' . $format,
+                    'Content-Length' => length $resp,
+                ],
+                [$resp],
+            ];
+        };
 
         # TODO /admin
     };
