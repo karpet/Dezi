@@ -13,13 +13,15 @@ sub version {
 my $preload_app;
 my $dezi_config_file;
 my $server_class = 'Dezi::Server';
+my $debug;
 
 require Getopt::Long;
 Getopt::Long::Configure( "no_ignore_case", "no_auto_abbrev", "pass_through" );
 Getopt::Long::GetOptions(
-    "preload-app"  => \$preload_app,
-    "dezi-config"  => \$dezi_config_file,
-    "server-class" => \$server_class,
+    "preload-app"    => \$preload_app,
+    "dezi-config=s"  => \$dezi_config_file,
+    "server-class=s" => \$server_class,
+    "debug"          => \$debug,
 );
 
 my @args = (
@@ -33,11 +35,18 @@ if ( !$preload_app ) {
 my $config = {};
 if ($dezi_config_file) {
     require Config::Any;
-    $config = Config::Any->load_files( { files => [$dezi_config_file] } );
+    $config = Config::Any->load_files(
+        {   files   => [$dezi_config_file],
+            use_ext => 1,
+        }
+    )->[0]->{$dezi_config_file};
 }
 
+$config->{debug} = $debug;
+
 eval "use $server_class";
-my $app = $server_class->app( engine_config => $config );
+die $@ if $@;
+my $app = $server_class->app($config);
 
 my @argv = @ARGV;
 
@@ -75,6 +84,44 @@ Search::OpenSearch and Search::Query.
 
 Dezi integrates several CPAN search libraries into one
 easy-to-use interface.
+
+=head1 OPTIONS
+
+The dezi app supports all the options that Plack::Runner supports.
+See the L<plackup> perldoc for a description. The following
+options are specific to dezi.
+
+=head2 debug
+
+Turns on verbosity in stderr Plack logging.
+
+=head2 dezi-config I<file>
+
+I<file> can be in any format supported by Config::Any.
+The structure expected contains a key called 'engine_config'
+which is passed directly to Search::OpenSearch::Server::Plack,
+which in turn passes through to Search::OpenSearch::Engine.
+
+Other config options include:
+
+=over 
+
+=item search_path I<path>
+
+The /-prefixed URI path where the Dezi server should accept
+incoming searcher requests. Defaults to '/search'.
+
+=item index_path I<path>
+
+The /-prefixed URI path where the Dezi server should accept
+incoming indexer requests. Defaults to '/index'.
+
+=back
+
+=head2 server-class I<class_name>
+
+Use I<class_name> instead of the default 'Dezi::Server'. Useful
+if you want to create your own server subclass of Dezi::Server.
 
 =head1 AUTHOR
 

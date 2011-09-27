@@ -25,19 +25,25 @@ sub new {
     my $search_path = delete $args{search_path};
     $engine_config->{link} ||= 'http://localhost:5000' . $search_path;
     $engine_config->{default_response_format} ||= 'JSON';
+    $engine_config->{debug} = $args{debug};
     $args{engine_config} = $engine_config;
 
     return $class->SUPER::new(%args);
 }
 
 sub app {
-    my ( $class, %opts ) = @_;
+    my ( $class, $config ) = @_;
 
-    my $search_path = delete $opts{search_path} || '/search';
-    my $index_path  = delete $opts{index_path}  || '/index';
-    my $app = $class->new( %opts, search_path => $search_path );
+    my $search_path = delete $config->{search_path} || '/search';
+    my $index_path  = delete $config->{index_path}  || '/index';
+    $search_path = "/$search_path" unless $search_path =~ m!^/!;
+    $index_path  = "/$index_path"  unless $index_path  =~ m!^/!;
+
+    my $app = $class->new( %$config, search_path => $search_path );
 
     builder {
+
+        enable "SimpleLogger", level => $config->{'debug'} ? "debug" : "warn";
 
         # right now these are identical
         mount $search_path => $app;
