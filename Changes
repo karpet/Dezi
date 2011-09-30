@@ -6,6 +6,7 @@ Revision history for Dezi
 0.001001    02 Aug  2011
     * change url root to /search, reserving namespaces /index and /admin as well
 
-0.001002    xxx
+0.001002    29 Sept 2011
     * fix docs, default engine config
+    * add / about() feature in support of Dezi::Client
 
