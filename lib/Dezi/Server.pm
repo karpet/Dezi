@@ -31,6 +31,45 @@ sub new {
     return $class->SUPER::new(%args);
 }
 
+sub about {
+    my ( $self, $server, $req, $search_path, $index_path ) = @_;
+
+    if ( $req->path ne '/' ) {
+        my $resp = 'Resource not found';
+        return [
+            404,
+            [   'Content-Type'   => 'text/plain',
+                'Content-Length' => length $resp,
+            ],
+            [$resp]
+        ];
+    }
+    $server->setup_engine();
+    my $format = lc( $req->parameters->{format}
+            || $server->engine->default_response_format );
+    my $uri = $req->uri;
+    $uri =~ s!/$!!;
+    my $about = {
+        search      => $uri . $search_path,
+        index       => $uri . $index_path,
+        description => 'This is a Dezi search server.',
+        version     => $VERSION,
+        fields      => $server->engine->fields,
+        facets      => $server->engine->facets,
+    };
+    my $resp
+        = $format eq 'json'
+        ? to_json($about)
+        : Search::Tools::XML->perl_to_xml( $about, 'dezi', 1 );
+    return [
+        200,
+        [   'Content-Type'   => 'application/' . $format,
+            'Content-Length' => length $resp,
+        ],
+        [$resp],
+    ];
+}
+
 sub app {
     my ( $class, $config ) = @_;
 
@@ -39,53 +78,20 @@ sub app {
     $search_path = "/$search_path" unless $search_path =~ m!^/!;
     $index_path  = "/$index_path"  unless $index_path  =~ m!^/!;
 
-    my $app = $class->new( %$config, search_path => $search_path );
+    my $server = $class->new( %$config, search_path => $search_path );
 
-    builder {
+    return builder {
 
         enable "SimpleLogger", level => $config->{'debug'} ? "debug" : "warn";
 
         # right now these are identical
-        mount $search_path => $app;
-        mount $index_path  => $app;
+        mount $search_path => $server;
+        mount $index_path  => $server;
 
         # default is just self-description
         mount '/' => sub {
             my $req = Plack::Request->new(shift);
-            if ( $req->path ne '/' ) {
-                my $resp = 'Resource not found';
-                return [
-                    404,
-                    [   'Content-Type'   => 'text/plain',
-                        'Content-Length' => length $resp,
-                    ],
-                    [$resp]
-                ];
-            }
-            $app->setup_engine();
-            my $format = lc( $req->parameters->{format}
-                    || $app->engine->default_response_format );
-            my $uri = $req->uri;
-            $uri =~ s!/$!!;
-            my $about = {
-                search      => $uri . $search_path,
-                index       => $uri . $index_path,
-                description => 'This is a Dezi search server.',
-                version     => $VERSION,
-                fields      => $app->engine->fields,
-                facets      => $app->engine->facets,
-            };
-            my $resp
-                = $format eq 'json'
-                ? to_json($about)
-                : Search::Tools::XML->perl_to_xml( $about, 'dezi', 1 );
-            return [
-                200,
-                [   'Content-Type'   => 'application/' . $format,
-                    'Content-Length' => length $resp,
-                ],
-                [$resp],
-            ];
+            return $class->about( $server, $req, $search_path, $index_path );
         };
 
         # TODO /admin
@@ -109,7 +115,7 @@ Start the Dezi server, listening on port 5000:
 
 Add a document B<foo> to the index:
 
- % curl -XPOST http://localhost:5000/index/foo \
+ % curl http://localhost:5000/index/foo -XPOST \
    -d '<doc><title>bar</title>hello world</doc>' \
    -H 'Content-Type: application/xml'
    
@@ -140,6 +146,12 @@ Returns an instance of the server.
 The Plack::Builder construction, class method. Called within the Plack
 server. Override this method in a subclass to change the basic application
 definition.
+
+=head2 about( I<server>, I<request>, I<search_path>, I<index_path> )
+
+Returns Plack-ready response describing the Dezi server. Used
+by Dezi::Client (among others) for interrogating the server about
+service paths, version, etc.
 
 =cut
 

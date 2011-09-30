@@ -20,7 +20,7 @@ Start the Dezi server, listening on port 5000:
 
 Add a document B<foo> to the index:
 
- % curl -XPOST http://localhost:5000/index/foo \
+ % curl http://localhost:5000/index/foo -XPOST \
    -d '<doc><title>bar</title>hello world</doc>' \
    -H 'Content-Type: application/xml'
    

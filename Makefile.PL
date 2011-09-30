@@ -22,5 +22,5 @@ install_script 'bin/dezi';
 WriteMakefile(
     PL_FILES => {},
     dist     => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
-    clean => { FILES => 'Dezi-*' },
+    clean => { FILES => 'Dezi-* dezi.index' },
 );
