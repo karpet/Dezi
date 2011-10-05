@@ -8,7 +8,7 @@ all_from 'lib/Dezi.pm';
 requires 'Test::More'                       => 0;
 requires 'Search::Query::Dialect::Lucy'     => 0.01;
 requires 'Lucy'                             => 0.001000;
-requires 'Search::OpenSearch::Engine::Lucy' => 0.01;
+requires 'Search::OpenSearch::Engine::Lucy' => 0.02;
 requires 'Search::OpenSearch::Server'       => 0.01;
 requires 'Search::OpenSearch'               => '0.14';
 requires 'Plack'                            => 0;
