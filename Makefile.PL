@@ -10,6 +10,7 @@ requires 'Search::Query::Dialect::Lucy'     => 0.01;
 requires 'Lucy'                             => 0.001000;
 requires 'Search::OpenSearch::Engine::Lucy' => 0.01;
 requires 'Search::OpenSearch::Server'       => 0.01;
+requires 'Search::OpenSearch'               => '0.14';
 requires 'Plack'                            => 0;
 
 perl_version '5.8.3';
