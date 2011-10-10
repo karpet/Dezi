@@ -10,3 +10,6 @@ Revision history for Dezi
     * fix docs, default engine config
     * add / about() feature in support of Dezi::Client
 
+0.001003    xxx
+    * fix dependencies in Makefile.PL
+
