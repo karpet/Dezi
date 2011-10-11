@@ -176,6 +176,10 @@ You can also look for information at:
 
 =over 4
 
+=item * Mailing list
+
+L<https://groups.google.com/forum/#!forum/dezi-search>
+
 =item * RT: CPAN's request tracker
 
 L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Dezi>
