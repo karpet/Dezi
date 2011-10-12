@@ -12,4 +12,5 @@ Revision history for Dezi
 
 0.001003    xxx
     * fix dependencies in Makefile.PL
+    * add Dezi::Tutorial
 
