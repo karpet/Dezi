@@ -1,41 +1,37 @@
-package Dezi;
-use warnings;
-use strict;
-
-our $VERSION = '0.001002';
-
-1;
-
-__END__
+=pod
 
 =head1 NAME
 
-Dezi - search platform based on Apache Lucy, Swish3, Search::OpenSearch and Plack
+Dezi::Tutorial - getting started with the Dezi search platform
 
-=head1 SYNOPSIS
+=head1 Installation
 
-Start the Dezi server, listening on port 5000:
+Install the Dezi server from CPAN:
 
- % dezi -p 5000
+ % cpan -i Dezi
+ 
+Install the Dezi client from CPAN:
 
-Add a document B<foo> to the index:
+ % cpan -i Dezi::Client
 
- % curl http://localhost:5000/index/foo -XPOST \
-   -d '<doc><title>bar</title>hello world</doc>' \
-   -H 'Content-Type: application/xml'
-   
-Search the index:
+=head1 Beginner
 
- % curl 'http://localhost:5000/search?q=bar&format=json'
- % curl 'http://localhost:5000/search?q=bar&format=xml'
+Start the Dezi server:
 
-=head1 DESCRIPTION
+ % dezi &
 
-Dezi is a search platform based on Apache Lucy, Swish3,
-Search::OpenSearch and Search::Query. 
+Add a small test document to the index:
 
-Dezi integrates several CPAN search libraries into one
-easy-to-use interface.
+ % echo '<doc><title>bar</title>hello world</doc>' > test.xml
+ % dezi-client test.xml
+
+Search the index to confirm your test document worked:
+
+ % dezi-client -q bar
+ 
+=head1 Intermediate
+
+=head1 Advanced
 
 =head1 AUTHOR
 

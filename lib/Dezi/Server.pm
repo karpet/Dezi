@@ -25,61 +25,73 @@ sub new {
     my $search_path = delete $args{search_path};
     $engine_config->{link} ||= 'http://localhost:5000' . $search_path;
     $engine_config->{default_response_format} ||= 'JSON';
+    $engine_config->{debug} = $args{debug};
     $args{engine_config} = $engine_config;
 
     return $class->SUPER::new(%args);
 }
 
+sub about {
+    my ( $self, $server, $req, $search_path, $index_path ) = @_;
+
+    if ( $req->path ne '/' ) {
+        my $resp = 'Resource not found';
+        return [
+            404,
+            [   'Content-Type'   => 'text/plain',
+                'Content-Length' => length $resp,
+            ],
+            [$resp]
+        ];
+    }
+    $server->setup_engine();
+    my $format = lc( $req->parameters->{format}
+            || $server->engine->default_response_format );
+    my $uri = $req->uri;
+    $uri =~ s!/$!!;
+    my $about = {
+        search      => $uri . $search_path,
+        index       => $uri . $index_path,
+        description => 'This is a Dezi search server.',
+        version     => $VERSION,
+        fields      => $server->engine->fields,
+        facets      => $server->engine->facets,
+    };
+    my $resp
+        = $format eq 'json'
+        ? to_json($about)
+        : Search::Tools::XML->perl_to_xml( $about, 'dezi', 1 );
+    return [
+        200,
+        [   'Content-Type'   => 'application/' . $format,
+            'Content-Length' => length $resp,
+        ],
+        [$resp],
+    ];
+}
+
 sub app {
-    my ( $class, %opts ) = @_;
+    my ( $class, $config ) = @_;
 
-    my $search_path = delete $opts{search_path} || '/search';
-    my $index_path  = delete $opts{index_path}  || '/index';
-    my $app = $class->new( %opts, search_path => $search_path );
+    my $search_path = delete $config->{search_path} || '/search';
+    my $index_path  = delete $config->{index_path}  || '/index';
+    $search_path = "/$search_path" unless $search_path =~ m!^/!;
+    $index_path  = "/$index_path"  unless $index_path  =~ m!^/!;
 
-    builder {
+    my $server = $class->new( %$config, search_path => $search_path );
+
+    return builder {
+
+        enable "SimpleLogger", level => $config->{'debug'} ? "debug" : "warn";
 
         # right now these are identical
-        mount $search_path => $app;
-        mount $index_path  => $app;
+        mount $search_path => $server;
+        mount $index_path  => $server;
 
         # default is just self-description
         mount '/' => sub {
             my $req = Plack::Request->new(shift);
-            if ( $req->path ne '/' ) {
-                my $resp = 'Resource not found';
-                return [
-                    404,
-                    [   'Content-Type'   => 'text/plain',
-                        'Content-Length' => length $resp,
-                    ],
-                    [$resp]
-                ];
-            }
-            $app->setup_engine();
-            my $format = lc( $req->parameters->{format}
-                    || $app->engine->default_response_format );
-            my $uri = $req->uri;
-            $uri =~ s!/$!!;
-            my $about = {
-                search      => $uri . $search_path,
-                index       => $uri . $index_path,
-                description => 'This is a Dezi search server.',
-                version     => $VERSION,
-                fields      => $app->engine->fields,
-                facets      => $app->engine->facets,
-            };
-            my $resp
-                = $format eq 'json'
-                ? to_json($about)
-                : Search::Tools::XML->perl_to_xml( $about, 'dezi', 1 );
-            return [
-                200,
-                [   'Content-Type'   => 'application/' . $format,
-                    'Content-Length' => length $resp,
-                ],
-                [$resp],
-            ];
+            return $class->about( $server, $req, $search_path, $index_path );
         };
 
         # TODO /admin
@@ -103,7 +115,7 @@ Start the Dezi server, listening on port 5000:
 
 Add a document B<foo> to the index:
 
- % curl -XPOST http://localhost:5000/index/foo \
+ % curl http://localhost:5000/index/foo -XPOST \
    -d '<doc><title>bar</title>hello world</doc>' \
    -H 'Content-Type: application/xml'
    
@@ -135,6 +147,12 @@ The Plack::Builder construction, class method. Called within the Plack
 server. Override this method in a subclass to change the basic application
 definition.
 
+=head2 about( I<server>, I<request>, I<search_path>, I<index_path> )
+
+Returns Plack-ready response describing the Dezi server. Used
+by Dezi::Client (among others) for interrogating the server about
+service paths, version, etc.
+
 =cut
 
 =head1 AUTHOR
@@ -157,6 +175,10 @@ You can find documentation for this module with the perldoc command.
 You can also look for information at:
 
 =over 4
+
+=item * Mailing list
+
+L<https://groups.google.com/forum/#!forum/dezi-search>
 
 =item * RT: CPAN's request tracker
 
