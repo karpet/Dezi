@@ -13,15 +13,8 @@ sub new {
 
     # default engine config
     my $engine_config = $args{engine_config} || {};
-    $engine_config->{type}   ||= 'Lucy';
-    $engine_config->{index}  ||= ['dezi.index'];
-    $engine_config->{fields} ||= [
-        qw(
-            swishencoding
-            swishmime
-            swishdocsize
-            )
-    ];
+    $engine_config->{type}  ||= 'Lucy';
+    $engine_config->{index} ||= ['dezi.index'];
     my $search_path = delete $args{search_path};
     $engine_config->{link} ||= 'http://localhost:5000' . $search_path;
     $engine_config->{default_response_format} ||= 'JSON';
