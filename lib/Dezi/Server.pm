@@ -6,7 +6,7 @@ use base 'Search::OpenSearch::Server::Plack';
 use JSON;
 use Search::Tools::XML;
 
-our $VERSION = '0.001002';
+our $VERSION = '0.001003';
 
 sub new {
     my ( $class, %args ) = @_;
@@ -45,7 +45,7 @@ sub about {
     my $about = {
         search      => $uri . $search_path,
         index       => $uri . $index_path,
-        description => 'This is a Dezi search server.',
+        description => 'This is a Dezi search server. See http://dezi.org/ for more details.',
         version     => $VERSION,
         fields      => $server->engine->fields,
         facets      => $server->engine->facets,
