@@ -40,15 +40,22 @@ sub about {
     $server->setup_engine();
     my $format = lc( $req->parameters->{format}
             || $server->engine->default_response_format );
+
     my $uri = $req->uri;
     $uri =~ s!/$!!;
+
     my $about = {
-        search      => $uri . $search_path,
-        index       => $uri . $index_path,
-        description => 'This is a Dezi search server. See http://dezi.org/ for more details.',
-        version     => $VERSION,
-        fields      => $server->engine->fields,
-        facets      => $server->engine->facets,
+        search => $uri . $search_path,
+        index  => $uri . $index_path,
+        description =>
+            'This is a Dezi search server. See http://dezi.org/ for more details.',
+        version => $VERSION,
+        fields  => $server->engine->fields,
+        facets  => (
+              $server->engine->facets
+            ? $server->engine->facets->names
+            : undef
+        ),
     };
     my $resp
         = $format eq 'json'

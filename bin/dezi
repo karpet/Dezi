@@ -32,6 +32,10 @@ my @args = (
 if ( !$preload_app ) {
     push @args, 'loader' => 'Delayed';
 }
+
+eval "use $server_class";
+die $@ if $@;
+
 my $config = {};
 if ($dezi_config_file) {
     require Config::Any;
@@ -44,8 +48,6 @@ if ($dezi_config_file) {
 
 $config->{debug} = $debug;
 
-eval "use $server_class";
-die $@ if $@;
 my $app = $server_class->app($config);
 
 my @argv = @ARGV;
