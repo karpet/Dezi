@@ -1,7 +1,6 @@
 # example Dezi server config file, in Perl format
 # Dezi uses Config::Any, so any format supported by
 # that module should work as well.
-#use SWISH::Prog::Config;
 
 use CHI;
 
@@ -23,7 +22,7 @@ my $c = {
 
         # options passed to SWISH::Prog::Lucy::Indexer->new
         indexer_config => {
-            config => {    #SWISH::Prog::Config->new(
+            config => { 
 
                 # searchable fields
                 MetaNames => 'color size flavor',
@@ -40,7 +39,7 @@ my $c = {
                 # use English snowball stemmer
                 FuzzyIndexingMode => 'Stemming_en1',
 
-            },    # ),
+            }, 
 
             # store token positions to optimize snippet creation
             highlightable_fields => 1,
