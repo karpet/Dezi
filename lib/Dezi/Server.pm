@@ -6,22 +6,15 @@ use base 'Search::OpenSearch::Server::Plack';
 use JSON;
 use Search::Tools::XML;
 
-our $VERSION = '0.001002';
+our $VERSION = '0.001003';
 
 sub new {
     my ( $class, %args ) = @_;
 
     # default engine config
     my $engine_config = $args{engine_config} || {};
-    $engine_config->{type}   ||= 'Lucy';
-    $engine_config->{index}  ||= ['dezi.index'];
-    $engine_config->{fields} ||= [
-        qw(
-            swishencoding
-            swishmime
-            swishdocsize
-            )
-    ];
+    $engine_config->{type}  ||= 'Lucy';
+    $engine_config->{index} ||= ['dezi.index'];
     my $search_path = delete $args{search_path};
     $engine_config->{link} ||= 'http://localhost:5000' . $search_path;
     $engine_config->{default_response_format} ||= 'JSON';
@@ -47,15 +40,22 @@ sub about {
     $server->setup_engine();
     my $format = lc( $req->parameters->{format}
             || $server->engine->default_response_format );
+
     my $uri = $req->uri;
     $uri =~ s!/$!!;
+
     my $about = {
-        search      => $uri . $search_path,
-        index       => $uri . $index_path,
-        description => 'This is a Dezi search server.',
-        version     => $VERSION,
-        fields      => $server->engine->fields,
-        facets      => $server->engine->facets,
+        search => $uri . $search_path,
+        index  => $uri . $index_path,
+        description =>
+            'This is a Dezi search server. See http://dezi.org/ for more details.',
+        version => $VERSION,
+        fields  => $server->engine->fields,
+        facets  => (
+              $server->engine->facets
+            ? $server->engine->facets->names
+            : undef
+        ),
     };
     my $resp
         = $format eq 'json'
