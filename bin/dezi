@@ -18,9 +18,6 @@ my $debug;
 require Getopt::Long;
 Getopt::Long::Configure( "no_ignore_case", "no_auto_abbrev", "pass_through" );
 Getopt::Long::GetOptions(
-    "preload-app"  => \$preload_app,
-    "dezi-config=s"  => \$dezi_config_file,
-    "server-class=s" => \$server_class,
     "preload-app"    => \$preload_app,
     "dezi-config=s"  => \$dezi_config_file,
     "server-class=s" => \$server_class,
