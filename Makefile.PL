@@ -10,8 +10,8 @@ requires 'Search::Query::Dialect::Lucy'     => 0.04;
 requires 'Lucy'                             => 0.001000;
 requires 'SWISH::Prog'                      => 0.54;
 requires 'Search::OpenSearch::Engine::Lucy' => 0.05;
-requires 'Search::OpenSearch::Server'       => 0.08;
-requires 'Search::OpenSearch'               => 0.14;
+requires 'Search::OpenSearch::Server'       => 0.09;
+requires 'Search::OpenSearch'               => 0.15;
 requires 'Plack'                            => 0;
 
 perl_version '5.8.3';

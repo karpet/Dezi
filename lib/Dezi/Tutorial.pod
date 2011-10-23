@@ -31,7 +31,35 @@ Search the index to confirm your test document worked:
  
 =head1 Intermediate
 
+Index your document collection with the B<swish3> command that
+comes with SWISH::Prog (one of the Dezi dependencies).
+
+ % swish3 -c path/to/swish.conf -F lucy -f path/to/index -i path/to/docs
+
+Start the Dezi server, using a custom config pointing to 
+the index you just created:
+
+ % cat myconfig.pl
+ my $conf = {
+    engine_config => {
+        # name of the index(es)
+        index => [qw( path/to/index )],
+    }
+ };
+ 
+ % dezi --dezi-config myconfig.pl &
+
+Search the index containing text from I<path/to/docs>.
+
+ % dezi-client -q 'some words'
+ 
 =head1 Advanced
+
+Write your own client application. See L<Dezi::Client> and the C<bin/dezi-client>
+script for examples.
+
+See the t/example-config.pl file in the Dezi distribution for a full
+example configuration file.
 
 =head1 AUTHOR
 

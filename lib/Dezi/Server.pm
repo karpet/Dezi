@@ -45,6 +45,7 @@ sub about {
     $uri =~ s!/$!!;
 
     my $about = {
+        engine => ref( $server->engine ),
         search => $uri . $search_path,
         index  => $uri . $index_path,
         description =>
