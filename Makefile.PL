@@ -13,6 +13,7 @@ requires 'Search::OpenSearch::Engine::Lucy' => 0.05;
 requires 'Search::OpenSearch::Server'       => 0.09;
 requires 'Search::OpenSearch'               => 0.15;
 requires 'Plack'                            => 0;
+requires 'Module::Load'                     => 0.22;
 
 perl_version '5.8.3';
 license 'http://dev.perl.org/licenses/';

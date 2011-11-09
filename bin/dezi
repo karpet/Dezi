@@ -3,6 +3,7 @@
 use warnings;
 use strict;
 use Plack::Runner;
+use Module::Load;
 
 our $VERSION = '0.001002';
 
@@ -33,7 +34,7 @@ if ( !$preload_app ) {
     push @args, 'loader' => 'Delayed';
 }
 
-eval "use $server_class";
+eval { load $server_class };
 die $@ if $@;
 
 my $config = {};
