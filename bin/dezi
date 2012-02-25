@@ -5,7 +5,7 @@ use strict;
 use Plack::Runner;
 use Module::Load;
 
-our $VERSION = '0.001002';
+our $VERSION = '0.001004';
 
 sub version {
     print "$VERSION\n";
@@ -15,12 +15,16 @@ my $preload_app;
 my $dezi_config_file;
 my $server_class = 'Dezi::Server';
 my $debug;
+my $ui_class;
+my $admin_class;
 
 require Getopt::Long;
 Getopt::Long::Configure( "no_ignore_case", "no_auto_abbrev", "pass_through" );
 Getopt::Long::GetOptions(
     "preload-app"    => \$preload_app,
     "dezi-config=s"  => \$dezi_config_file,
+    "ui-class=s"     => \$ui_class,
+    "admin-class=s"  => \$admin_class,
     "server-class=s" => \$server_class,
     "debug"          => \$debug,
 );
@@ -47,7 +51,18 @@ if ($dezi_config_file) {
     )->[0]->{$dezi_config_file};
 }
 
-$config->{debug} = $debug;
+if ($ui_class) {
+    eval { load $ui_class };
+    die $@ if $@;
+}
+if ($admin_class) {
+    eval { load $admin_class };
+    die $@ if $@;
+}
+
+$config->{debug}       = $debug;
+$config->{ui_class}    = $ui_class;
+$config->{admin_class} = $admin_class;
 
 my $app = $server_class->app($config);
 
@@ -125,6 +140,15 @@ incoming indexer requests. Defaults to '/index'.
 
 Use I<class_name> instead of the default 'Dezi::Server'. Useful
 if you want to create your own server subclass of Dezi::Server.
+
+=head2 ui-class I<class_name>
+
+Use I<class_name> as a middleware mounted under C</ui>.
+Try L<Dezi::UI> as an example.
+
+=head2 admin-class I<class_name>
+
+B<not yet implemented>
 
 =head1 AUTHOR
 

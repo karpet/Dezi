@@ -6,7 +6,7 @@ use base 'Search::OpenSearch::Server::Plack';
 use JSON;
 use Search::Tools::XML;
 
-our $VERSION = '0.001003';
+our $VERSION = '0.001004';
 
 sub new {
     my ( $class, %args ) = @_;
@@ -81,6 +81,15 @@ sub app {
 
     my $server = $class->new( %$config, search_path => $search_path );
 
+    my $ui;
+    if ( $config->{ui_class} ) {
+        $ui = $config->{ui_class}->new( search_path => $search_path );
+    }
+    my $admin;
+    if ( $config->{admin_class} ) {
+        $admin = $config->{admin_class}->new( $class, $config );
+    }
+
     return builder {
 
         enable "SimpleLogger", level => $config->{'debug'} ? "debug" : "warn";
@@ -89,13 +98,32 @@ sub app {
         mount $search_path => $server;
         mount $index_path  => $server;
 
+        if ($ui) {
+            mount '/ui' => $ui;
+
+            # necessary for Ext callback to work in UI
+            enable "JSONP";
+
+            # TODO hack for Ext uri
+            mount "/resources/images/default/s.gif" => sub {
+                my $req  = Plack::Request->new(shift);
+                my $resp = $req->new_response;
+                $resp->redirect( 'http://dezi.org/ui/example/s.gif', 301 );
+                return $resp->finalize();
+                }
+
+        }
+
+        if ($admin) {
+            mount '/admin' => $admin;
+        }
+
         # default is just self-description
         mount '/' => sub {
             my $req = Plack::Request->new(shift);
             return $class->about( $server, $req, $search_path, $index_path );
         };
 
-        # TODO /admin
     };
 
 }
