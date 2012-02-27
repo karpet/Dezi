@@ -25,7 +25,7 @@ sub new {
 }
 
 sub about {
-    my ( $self, $server, $req, $search_path, $index_path ) = @_;
+    my ( $self, $server, $req, $search_path, $index_path, $config ) = @_;
 
     if ( $req->path ne '/' ) {
         my $resp = 'Resource not found';
@@ -58,6 +58,12 @@ sub about {
             : undef
         ),
     };
+    if ( $config->{ui_class} ) {
+        $about->{ui} = $config->{ui_class};
+    }
+    if ( $config->{admin_class} ) {
+        $about->{admin} = $config->{admin_class};
+    }
     my $resp
         = $format eq 'json'
         ? to_json($about)
@@ -121,7 +127,8 @@ sub app {
         # default is just self-description
         mount '/' => sub {
             my $req = Plack::Request->new(shift);
-            return $class->about( $server, $req, $search_path, $index_path );
+            return $class->about( $server, $req, $search_path, $index_path,
+                $config );
         };
 
     };
