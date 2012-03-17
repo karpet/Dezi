@@ -14,6 +14,6 @@ Revision history for Dezi
     * fix dependencies in Makefile.PL
     * add Dezi::Tutorial
 
-0.001004   xxx
+0.001004    16 March 2012
     * added ui-class and admin-class options
 
