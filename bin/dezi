@@ -116,11 +116,42 @@ Turns on verbosity in stderr Plack logging.
 =head2 dezi-config I<file>
 
 I<file> can be in any format supported by Config::Any.
-The structure expected contains a key called 'engine_config'
+The structure expected contains a key called C<engine_config>
 which is passed directly to Search::OpenSearch::Server::Plack,
 which in turn passes through to Search::OpenSearch::Engine.
 
-Other config options include:
+Example (in native Perl format):
+
+ use CHI;
+ my $c = {
+  engine_config => {
+   index       => [qw( path/to/index1 path/to/index2 )],
+    facets      => {
+        names       => [qw( color size flavor )],
+        sample_size => 10_000,
+    },
+    fields      => [qw( color size flavor )],   # result attributes in response
+    indexer_config  => {
+        somekey => somevalue,
+    },
+    searcher_config => {
+        anotherkey => anothervalue,
+    },
+    cache           => CHI->new(
+        driver           => 'File',
+        dir_create_mode  => 0770,
+        file_create_mode => 0660,
+        root_dir         => "/tmp/opensearch_cache",
+    ),
+    cache_ttl       => 3600,
+    do_not_hilite   => [qw( color )],
+    snipper_config  => { as_sentences => 1 },        # see Search::Tools::Snipper
+    hiliter_config  => { class => 'h', tag => 'b' }, # see Search::Tools::HiLiter
+    parser_config   => {},                           # see Search::Query::Parser
+  }
+ };
+ 
+Other config key options include:
 
 =over 
 
