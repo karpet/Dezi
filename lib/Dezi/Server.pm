@@ -6,7 +6,7 @@ use base 'Search::OpenSearch::Server::Plack';
 use JSON;
 use Search::Tools::XML;
 
-our $VERSION = '0.001004';
+our $VERSION = '0.001005';
 
 sub new {
     my ( $class, %args ) = @_;
