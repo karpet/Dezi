@@ -1,6 +1,7 @@
 package Dezi::Server;
 use warnings;
 use strict;
+use Carp;
 use Plack::Builder;
 use base 'Search::OpenSearch::Server::Plack';
 use Dezi::Server::About;
@@ -23,11 +24,11 @@ sub new {
     return $class->SUPER::new(%args);
 }
 
-sub app {
-    my ( $class, $config ) = @_;
-
+sub parse_dezi_config {
+    my $class       = shift;
+    my $config      = shift or croak "config hashref required";
     my $search_path = delete $config->{search_path} || '/search';
-    my $index_path  = delete $config->{index_path}  || '/index';
+    my $index_path  = delete $config->{index_path} || '/index';
     $search_path = "/$search_path" unless $search_path =~ m!^/!;
     $index_path  = "/$index_path"  unless $index_path  =~ m!^/!;
 
@@ -41,17 +42,30 @@ sub app {
     if ( $config->{admin_class} ) {
         $admin = $config->{admin_class}->new( $class, $config );
     }
+    return {
+        search_path => $search_path,
+        index_path  => $index_path,
+        server      => $server,
+        ui          => $ui,
+        admin       => $admin,
+    };
+}
+
+sub app {
+    my ( $class, $config ) = @_;
+
+    my $dezi_config = $class->parse_dezi_config($config);
 
     return builder {
 
         enable "SimpleLogger", level => $config->{'debug'} ? "debug" : "warn";
 
         # right now these are identical
-        mount $search_path => $server;
-        mount $index_path  => $server;
+        mount $dezi_config->{search_path} => $dezi_config->{server};
+        mount $dezi_config->{index_path}  => $dezi_config->{server};
 
-        if ($ui) {
-            mount '/ui' => $ui;
+        if ( $dezi_config->{ui} ) {
+            mount '/ui' => $dezi_config->{ui};
 
             # necessary for Ext callback to work in UI
             enable "JSONP";
@@ -66,18 +80,18 @@ sub app {
 
         }
 
-        if ($admin) {
-            mount '/admin' => $admin;
+        if ( $dezi_config->{admin} ) {
+            mount '/admin' => $dezi_config->{admin};
         }
 
         # default is just self-description
         mount '/' => sub {
             my $req = Plack::Request->new(shift);
             return Dezi::Server::About->new(
-                server      => $server,
+                server      => $dezi_config->{server},
                 request     => $req,
-                search_path => $search_path,
-                index_path  => $index_path,
+                search_path => $dezi_config->{search_path},
+                index_path  => $dezi_config->{index_path},
                 config      => $config,
                 version     => $VERSION,
             );
