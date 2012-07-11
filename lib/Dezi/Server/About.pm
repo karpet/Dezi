@@ -32,7 +32,7 @@ sub new {
     my $format = lc( $req->parameters->{format}
             || $server->engine->default_response_format );
 
-    my $uri = $req->uri;
+    my $uri = $req->base;
     $uri =~ s!/$!!;
 
     my $about = {
