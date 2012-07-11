@@ -149,11 +149,10 @@ The Plack::Builder construction, class method. Called within the Plack
 server. Override this method in a subclass to change the basic application
 definition.
 
-=head2 about( I<server>, I<request>, I<search_path>, I<index_path> )
+=head2 parse_dezi_config( I<config> )
 
-Returns Plack-ready response describing the Dezi server. Used
-by Dezi::Client (among others) for interrogating the server about
-service paths, version, etc.
+Returns hashref of values culled from I<config> including a server instance.
+Used internally by app().
 
 =cut
 
