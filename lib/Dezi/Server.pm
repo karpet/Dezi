@@ -6,7 +6,7 @@ use Plack::Builder;
 use base 'Search::OpenSearch::Server::Plack';
 use Dezi::Server::About;
 
-our $VERSION = '0.001005';
+our $VERSION = '0.001006';
 
 sub new {
     my ( $class, %args ) = @_;

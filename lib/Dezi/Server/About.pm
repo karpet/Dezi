@@ -5,7 +5,7 @@ use Carp;
 use JSON;
 use Search::Tools::XML;
 
-our $VERSION = '0.001005';
+our $VERSION = '0.001006';
 
 sub new {
     my $class       = shift;
