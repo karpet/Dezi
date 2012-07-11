@@ -19,4 +19,5 @@ Revision history for Dezi
 
 0.001005    xxx
     * add config documentation
+    * refactor Dezi::Server to create Dezi::Server::About class
 
