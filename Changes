@@ -17,7 +17,7 @@ Revision history for Dezi
 0.001004    16 March 2012
     * added ui-class and admin-class options
 
-0.001005    xxx
+0.001005    10 July 2012
     * add config documentation
     * refactor Dezi::Server to create Dezi::Server::About class
 
