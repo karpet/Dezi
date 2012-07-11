@@ -3,8 +3,7 @@ use warnings;
 use strict;
 use Plack::Builder;
 use base 'Search::OpenSearch::Server::Plack';
-use JSON;
-use Search::Tools::XML;
+use Dezi::Server::About;
 
 our $VERSION = '0.001005';
 
@@ -22,59 +21,6 @@ sub new {
     $args{engine_config} = $engine_config;
 
     return $class->SUPER::new(%args);
-}
-
-sub about {
-    my ( $self, $server, $req, $search_path, $index_path, $config ) = @_;
-
-    if ( $req->path ne '/' ) {
-        my $resp = 'Resource not found';
-        return [
-            404,
-            [   'Content-Type'   => 'text/plain',
-                'Content-Length' => length $resp,
-            ],
-            [$resp]
-        ];
-    }
-    $server->setup_engine();
-    my $format = lc( $req->parameters->{format}
-            || $server->engine->default_response_format );
-
-    my $uri = $req->uri;
-    $uri =~ s!/$!!;
-
-    my $about = {
-        engine => ref( $server->engine ),
-        search => $uri . $search_path,
-        index  => $uri . $index_path,
-        description =>
-            'This is a Dezi search server. See http://dezi.org/ for more details.',
-        version => $VERSION,
-        fields  => $server->engine->fields,
-        facets  => (
-              $server->engine->facets
-            ? $server->engine->facets->names
-            : undef
-        ),
-    };
-    if ( $config->{ui_class} ) {
-        $about->{ui} = $config->{ui_class};
-    }
-    if ( $config->{admin_class} ) {
-        $about->{admin} = $config->{admin_class};
-    }
-    my $resp
-        = $format eq 'json'
-        ? to_json($about)
-        : Search::Tools::XML->perl_to_xml( $about, 'dezi', 1 );
-    return [
-        200,
-        [   'Content-Type'   => 'application/' . $format,
-            'Content-Length' => length $resp,
-        ],
-        [$resp],
-    ];
 }
 
 sub app {
@@ -127,8 +73,14 @@ sub app {
         # default is just self-description
         mount '/' => sub {
             my $req = Plack::Request->new(shift);
-            return $class->about( $server, $req, $search_path, $index_path,
-                $config );
+            return Dezi::Server::About->new(
+                server      => $server,
+                request     => $req,
+                search_path => $search_path,
+                index_path  => $index_path,
+                config      => $config,
+                version     => $VERSION,
+            );
         };
 
     };

@@ -7,7 +7,7 @@ name 'Dezi';
 all_from 'lib/Dezi.pm';
 requires 'Test::More'                       => 0;
 requires 'Search::Query::Dialect::Lucy'     => 0.04;
-requires 'Lucy'                             => 0.001000;
+requires 'Lucy'                             => 0.003000;
 requires 'SWISH::Prog'                      => 0.54;
 requires 'Search::OpenSearch::Engine::Lucy' => 0.05;
 requires 'Search::OpenSearch::Server'       => 0.09;
@@ -19,7 +19,7 @@ perl_version '5.8.3';
 license 'http://dev.perl.org/licenses/';
 homepage 'https://github.com/karpet/Dezi';
 bugtracker 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=Dezi';
-repository 'git://github.com/karpet/Dezi.git';
+repository 'http://github.com/karpet/Dezi';
 install_script 'bin/dezi';
 
 WriteMakefile(

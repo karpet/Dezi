@@ -8,6 +8,7 @@ inc/Module/Install/Metadata.pm
 inc/Module/Install/Scripts.pm
 lib/Dezi.pm
 lib/Dezi/Server.pm
+lib/Dezi/Server/About.pm
 lib/Dezi/Tutorial.pod
 Makefile.PL
 MANIFEST
