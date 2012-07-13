@@ -97,6 +97,13 @@ sub app {
             );
         };
 
+        mount '/favicon.ico' => sub {
+            my $req = Plack::Request->new(shift);
+            my $res = $req->new_response(301);
+            $res->redirect('http://dezi.org/favicon.ico');
+            $res->finalize();
+        };
+
     };
 
 }
