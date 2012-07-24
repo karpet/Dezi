@@ -36,6 +36,6 @@ SKIP: {
             },
         );
     }
-    '<', 1, "new parser";
+    '<', 1, "no dezi leaks";
 
 }
