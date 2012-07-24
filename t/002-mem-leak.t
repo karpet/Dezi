@@ -6,7 +6,7 @@ use Data::Dump qw( dump );
 
 use constant HAS_LEAKTRACE => eval { require Test::LeakTrace };
 use Test::More HAS_LEAKTRACE
-    ? ( tests => 2 )
+    ? ( tests => 1 )
     : ( skip_all => 'require Test::LeakTrace' );
 use Test::LeakTrace;
 
@@ -17,7 +17,7 @@ SKIP: {
 
     if ( !$ENV{DEZI_INDEX} ) {
         diag('must define DEZI_INDEX');
-        skip 'must define DEZI_INDEX', 2;
+        skip 'must define DEZI_INDEX', 1;
     }
 
     leaks_cmp_ok {
