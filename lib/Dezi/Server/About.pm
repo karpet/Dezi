@@ -100,11 +100,11 @@ sub new {
     };
     if ( $config->{ui_class} ) {
         $about->{ui_class} = $config->{ui_class};
-        $about->{ui}       = $base_uri . '/ui';
+        $about->{ui}       = $uri . '/ui';
     }
     if ( $config->{admin_class} ) {
         $about->{admin_class} = $config->{admin_class};
-        $about->{admin}       = $base_uri . '/admin';
+        $about->{admin}       = $uri . '/admin';
     }
     my $resp
         = $format eq 'json'
