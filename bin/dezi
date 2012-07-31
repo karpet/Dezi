@@ -51,18 +51,18 @@ if ($dezi_config_file) {
     )->[0]->{$dezi_config_file};
 }
 
-if ($ui_class) {
-    eval { load $ui_class };
-    die $@ if $@;
-}
-if ($admin_class) {
-    eval { load $admin_class };
-    die $@ if $@;
-}
-
 $config->{debug} = $debug;
 $config->{ui_class}    ||= $ui_class;
 $config->{admin_class} ||= $admin_class;
+
+if ( $config->{ui_class} ) {
+    eval { load $config->{ui_class} };
+    die $@ if $@;
+}
+if ( $config->{admin_class} ) {
+    eval { load $config->{admin_class} };
+    die $@ if $@;
+}
 
 my $app = $server_class->app($config);
 
