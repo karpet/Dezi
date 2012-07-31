@@ -32,13 +32,60 @@ sub new {
     my $format = lc( $req->parameters->{format}
             || $server->engine->default_response_format );
 
-    my $uri = $req->base;
+    my ( $search_uri, $index_uri );
+    my $uri = delete $args{base_uri} || $req->base;
     $uri =~ s!/$!!;
+    if ( $search_path =~ m/^https?:/ ) {
+        $search_uri = $search_path;
+    }
+    else {
+        $search_uri = $uri . $search_path;
+    }
+    if ( $index_path =~ m/^https?:/ ) {
+        $index_uri = $index_path;
+    }
+    else {
+        $index_uri = $uri . $index_path;
+    }
 
     my $about = {
+        name         => 'Dezi',
+        author       => 'Peter Karman <karpet@dezi.org>',
+        api_base_url => $uri,
+        api_format   => [qw( json extjs xml )],
+        methods      => [
+            {   method      => 'GET',
+                path        => $search_path,
+                params      => [qw( q r c f o s p t u)],
+                required    => [qw( q )],
+                description => 'return search results',
+                base_url    => $search_uri,
+            },
+            {   method      => 'POST',
+                path        => $index_path . ':doc_uri',
+                params      => [],
+                required    => [],
+                description => 'update the index with content for doc_uri',
+                base_url    => $index_uri,
+            },
+            {   method      => 'PUI',
+                path        => $index_path . ':doc_uri',
+                params      => [],
+                required    => [],
+                description => 'update the index with content for doc_uri',
+                base_url    => $index_uri,
+            },
+            {   method      => 'DELETE',
+                path        => $index_path . ':doc_uri',
+                params      => [],
+                required    => [],
+                description => 'remove doc_uri from the index',
+                base_url    => $index_uri,
+            },
+        ],
         engine => ref( $server->engine ),
-        search => $uri . $search_path,
-        index  => $uri . $index_path,
+        search => $search_uri,
+        index  => $index_uri,
         description =>
             'This is a Dezi search server. See http://dezi.org/ for more details.',
         version => $version,
