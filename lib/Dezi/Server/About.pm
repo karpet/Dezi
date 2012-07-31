@@ -29,7 +29,9 @@ sub new {
         ];
     }
     $server->setup_engine();
-    my $format = lc( $req->parameters->{format}
+    my $format
+        = lc(  $req->parameters->{t}
+            || $req->parameters->{format}
             || $server->engine->default_response_format );
 
     my ( $search_uri, $index_uri );
@@ -97,10 +99,12 @@ sub new {
         ),
     };
     if ( $config->{ui_class} ) {
-        $about->{ui} = $config->{ui_class};
+        $about->{ui_class} = $config->{ui_class};
+        $about->{ui}       = $base_uri . '/ui';
     }
     if ( $config->{admin_class} ) {
-        $about->{admin} = $config->{admin_class};
+        $about->{admin_class} = $config->{admin_class};
+        $about->{admin}       = $base_uri . '/admin';
     }
     my $resp
         = $format eq 'json'
