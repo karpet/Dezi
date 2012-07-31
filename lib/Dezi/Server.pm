@@ -31,13 +31,14 @@ sub parse_dezi_config {
     my $index_path  = delete $config->{index_path} || '/index';
     $search_path = "/$search_path" unless $search_path =~ m!^(https?:|/)!;
     $index_path  = "/$index_path"  unless $index_path  =~ m!^(https?:|/)!;
-    my $base_uri = delete $config->{base_uri} || '/';
+    my $base_uri = delete $config->{base_uri} || '';
 
     my $server = $class->new( %$config, search_path => $search_path );
 
     my $ui;
     if ( $config->{ui_class} ) {
-        $ui = $config->{ui_class}->new( search_path => $search_path );
+        $ui = $config->{ui_class}
+            ->new( search_path => $search_path, base_uri => $base_uri );
     }
     my $admin;
     if ( $config->{admin_class} ) {
