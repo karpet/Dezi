@@ -52,7 +52,7 @@ sub new {
         name         => 'Dezi',
         author       => 'Peter Karman <karpet@dezi.org>',
         api_base_url => $uri,
-        api_format   => [qw( json extjs xml )],
+        api_format   => [qw( JSON ExtJS XML )],
         methods      => [
             {   method      => 'GET',
                 path        => $search_path,
@@ -68,7 +68,7 @@ sub new {
                 description => 'update the index with content for doc_uri',
                 base_url    => $index_uri,
             },
-            {   method      => 'PUI',
+            {   method      => 'PUT',
                 path        => $index_path . ':doc_uri',
                 params      => [],
                 required    => [],
