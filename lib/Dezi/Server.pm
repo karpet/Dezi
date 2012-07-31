@@ -29,8 +29,8 @@ sub parse_dezi_config {
     my $config      = shift or croak "config hashref required";
     my $search_path = delete $config->{search_path} || '/search';
     my $index_path  = delete $config->{index_path} || '/index';
-    $search_path = "/$search_path" unless $search_path =~ m!^(https?:|/)!;
-    $index_path  = "/$index_path"  unless $index_path  =~ m!^(https?:|/)!;
+    $search_path = "/$search_path" unless $search_path =~ m!^/!;
+    $index_path  = "/$index_path"  unless $index_path  =~ m!^/!;
     my $base_uri = delete $config->{base_uri} || '';
 
     my $server = $class->new( %$config, search_path => $search_path );
