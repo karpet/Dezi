@@ -60,9 +60,9 @@ if ($admin_class) {
     die $@ if $@;
 }
 
-$config->{debug}       = $debug;
-$config->{ui_class}    = $ui_class;
-$config->{admin_class} = $admin_class;
+$config->{debug} = $debug;
+$config->{ui_class}    ||= $ui_class;
+$config->{admin_class} ||= $admin_class;
 
 my $app = $server_class->app($config);
 
