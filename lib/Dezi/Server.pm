@@ -31,6 +31,7 @@ sub parse_dezi_config {
     my $index_path  = delete $config->{index_path} || '/index';
     $search_path = "/$search_path" unless $search_path =~ m!^(https?:|/)!;
     $index_path  = "/$index_path"  unless $index_path  =~ m!^(https?:|/)!;
+    my $base_uri = delete $config->{base_uri} || '/';
 
     my $server = $class->new( %$config, search_path => $search_path );
 
@@ -48,6 +49,7 @@ sub parse_dezi_config {
         server      => $server,
         ui          => $ui,
         admin       => $admin,
+        base_uri    => $base_uri,
     };
 }
 
@@ -66,18 +68,6 @@ sub app {
 
         if ( $dezi_config->{ui} ) {
             mount '/ui' => $dezi_config->{ui};
-
-            # necessary for Ext callback to work in UI
-            enable "JSONP";
-
-            # TODO hack for Ext uri
-            mount "/resources/images/default/s.gif" => sub {
-                my $req  = Plack::Request->new(shift);
-                my $resp = $req->new_response;
-                $resp->redirect( 'http://dezi.org/ui/example/s.gif', 301 );
-                return $resp->finalize();
-                }
-
         }
 
         if ( $dezi_config->{admin} ) {
@@ -94,6 +84,7 @@ sub app {
                 index_path  => $dezi_config->{index_path},
                 config      => $config,
                 version     => $VERSION,
+                base_uri    => $dezi_config->{base_uri},
             );
         };
 
