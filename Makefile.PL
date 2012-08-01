@@ -9,12 +9,13 @@ requires 'Test::More'                       => 0;
 requires 'Search::Query'                    => 0.21;
 requires 'Search::Query::Dialect::Lucy'     => 0.05;
 requires 'Lucy'                             => 0.003002;
-requires 'SWISH::Prog'                      => 0.59;
+requires 'SWISH::Prog'                      => 0.60;
 requires 'Search::OpenSearch::Engine::Lucy' => 0.09;
 requires 'Search::OpenSearch::Server'       => 0.12;
 requires 'Search::OpenSearch'               => 0.16;
 requires 'Plack'                            => 0;
 requires 'Module::Load'                     => 0.22;
+requires 'Plack::Middleware::ReverseProxy'  => 0;
 
 perl_version '5.8.3';
 license 'http://dev.perl.org/licenses/';

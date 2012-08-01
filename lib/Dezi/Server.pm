@@ -63,6 +63,9 @@ sub app {
 
         enable "SimpleLogger", level => $config->{'debug'} ? "debug" : "warn";
 
+        enable_if { $_[0]->{REMOTE_ADDR} eq '127.0.0.1' } 
+          "Plack::Middleware::ReverseProxy";
+
         # right now these are identical
         mount $dezi_config->{search_path} => $dezi_config->{server};
         mount $dezi_config->{index_path}  => $dezi_config->{server};
