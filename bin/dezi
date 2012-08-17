@@ -5,7 +5,7 @@ use strict;
 use Plack::Runner;
 use Module::Load;
 
-our $VERSION = '0.001004';
+our $VERSION = '0.001006';
 
 sub version {
     print "$VERSION\n";
