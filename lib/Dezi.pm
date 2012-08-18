@@ -2,7 +2,7 @@ package Dezi;
 use warnings;
 use strict;
 
-our $VERSION = '0.001006';
+our $VERSION = '0.001007';
 
 1;
 
@@ -10,7 +10,7 @@ __END__
 
 =head1 NAME
 
-Dezi - search platform based on Apache Lucy, Swish3, Search::OpenSearch and Plack
+Dezi - REST search platform
 
 =head1 SYNOPSIS
 
@@ -93,6 +93,6 @@ See http://dev.perl.org/licenses/ for more information.
 =head1 SEE ALSO
 
 L<Search::OpenSearch>, L<SWISH::3>, L<SWISH::Prog::Lucy>,
-L<Plack>, L<Lucy>
+L<Plack>, L<Lucy>, L<http://dezi.org>
 
 =cut

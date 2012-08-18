@@ -26,4 +26,6 @@ Revision history for Dezi
     * fixes to URI generation in About
     * now requires Plack::Middleware::ReverseProxy for automatic detection when running behind a reverse proxy.
 
+0.001007    xxx
+    * pod tweeks
 
