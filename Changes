@@ -21,7 +21,7 @@ Revision history for Dezi
     * add config documentation
     * refactor Dezi::Server to create Dezi::Server::About class
 
-0.001006    xxx
+0.001006    17 Aug 2012
     * support SPORE specification in About (https://github.com/SPORE/specifications/blob/master/spore_description.pod)
     * fixes to URI generation in About
     * now requires Plack::Middleware::ReverseProxy for automatic detection when running behind a reverse proxy.
