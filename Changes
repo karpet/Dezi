@@ -28,4 +28,4 @@ Revision history for Dezi
 
 0.001007    xxx
     * pod tweeks
-
+    * quote some objects in About to force stringify
