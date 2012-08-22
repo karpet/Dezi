@@ -26,6 +26,6 @@ Revision history for Dezi
     * fixes to URI generation in About
     * now requires Plack::Middleware::ReverseProxy for automatic detection when running behind a reverse proxy.
 
-0.001007    xxx
+0.001007    21 Aug 2012
     * pod additions and fixes.
     * quote some objects in About to force stringify.
