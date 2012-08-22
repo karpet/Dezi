@@ -73,14 +73,21 @@ automatically be notified of progress on your bug as I make changes.
 
 =head1 SUPPORT
 
-You can find documentation for this module with the perldoc command.
+You can find this documentation with the perldoc command.
 
-    perldoc Dezi
-
+    perldoc Dezi::Tutorial
 
 You can also look for information at:
 
 =over 4
+
+=item * Website
+
+L<http://dezi.org/>
+
+=item * IRC
+
+#dezisearch at freenode
 
 =item * Mailing list
 

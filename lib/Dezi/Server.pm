@@ -125,8 +125,8 @@ Add a document B<foo> to the index:
    
 Search the index:
 
- % curl 'http://localhost:5000/search?q=bar&format=json'
- % curl 'http://localhost:5000/search?q=bar&format=xml'
+ % curl 'http://localhost:5000/search?q=bar&t=JSON'
+ % curl 'http://localhost:5000/search?q=bar&t=XML'
 
 =head1 DESCRIPTION
 
@@ -135,6 +135,9 @@ Search::OpenSearch and Search::Query.
 
 Dezi integrates several CPAN search libraries into one
 easy-to-use interface.
+
+Be sure to read the perldoc for L<Search::OpenSearch::Engine>
+and L<Search::OpenSearch::Server::Plack>.
 
 =head1 METHODS
 

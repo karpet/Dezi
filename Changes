@@ -27,5 +27,5 @@ Revision history for Dezi
     * now requires Plack::Middleware::ReverseProxy for automatic detection when running behind a reverse proxy.
 
 0.001007    xxx
-    * pod tweeks
-    * quote some objects in About to force stringify
+    * pod additions and fixes.
+    * quote some objects in About to force stringify.

@@ -26,8 +26,8 @@ Add a document B<foo> to the index:
    
 Search the index:
 
- % curl 'http://localhost:5000/search?q=bar&format=json'
- % curl 'http://localhost:5000/search?q=bar&format=xml'
+ % curl 'http://localhost:5000/search?q=bar&t=JSON'
+ % curl 'http://localhost:5000/search?q=bar&t=XML'
 
 =head1 DESCRIPTION
 
@@ -37,9 +37,41 @@ Search::OpenSearch and Search::Query.
 Dezi integrates several CPAN search libraries into one
 easy-to-use interface.
 
+This document is a placeholder for the namespace and documentation
+only. You should read:
+
+=over
+
+=item
+
+the L<Dezi::Tutorial>
+
+=item
+
+the L<Dezi::Server> class documentation
+
+=item
+
+the L<dezi> command line tool perldoc, which includes details
+about the configuration file format.
+
+=item
+
+the L<Search::OpenSearch::Server::Plack> documentation, upon which
+Dezi relies heavily.
+
+=back
+
 =head1 AUTHOR
 
 Peter Karman, C<< <karman at cpan.org> >>
+
+=head1 ACKNOWLEDGEMENTS
+
+Much of the code upon which Dezi relies
+was originally developed for the 
+Public Insight Network at American Public Media.
+L<http://www.publicinsightnetwork.org>.
 
 =head1 BUGS
 
@@ -57,6 +89,14 @@ You can find documentation for this module with the perldoc command.
 You can also look for information at:
 
 =over 4
+
+=item * Website
+
+L<http://dezi.org/>
+
+=item * IRC
+
+#dezisearch at freenode
 
 =item * Mailing list
 

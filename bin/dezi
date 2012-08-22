@@ -103,6 +103,9 @@ Search::OpenSearch and Search::Query.
 Dezi integrates several CPAN search libraries into one
 easy-to-use interface.
 
+If you haven't yet read it, the L<Dezi::Tutorial> is a good
+place to start.
+
 =head1 OPTIONS
 
 The dezi app supports all the options that Plack::Runner supports.
@@ -125,7 +128,7 @@ Example (in native Perl format):
  use CHI;
  my $c = {
   engine_config => {
-   index       => [qw( path/to/index1 path/to/index2 )],
+    index       => [qw( path/to/index1 path/to/index2 )],
     facets      => {
         names       => [qw( color size flavor )],
         sample_size => 10_000,
@@ -203,6 +206,14 @@ You can also look for information at:
 
 =over 4
 
+=item * Website
+
+L<http://dezi.org/>
+
+=item * IRC
+
+#dezisearch at freenode
+
 =item * Mailing list
 
 L<https://groups.google.com/forum/#!forum/dezi-search>
@@ -242,6 +253,10 @@ by the Free Software Foundation; or the Artistic License.
 
 See http://dev.perl.org/licenses/ for more information.
 
+=head1 SEE ALSO
+
+L<Search::OpenSearch>, L<SWISH::3>, L<SWISH::Prog::Lucy>,
+L<Plack>, L<Lucy>, L<http://dezi.org>
 
 =cut
 
