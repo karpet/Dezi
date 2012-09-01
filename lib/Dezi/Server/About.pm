@@ -5,7 +5,7 @@ use Carp;
 use JSON;
 use Search::Tools::XML;
 
-our $VERSION = '0.001007';
+our $VERSION = '0.001007_01';
 
 sub new {
     my $class       = shift;
@@ -15,7 +15,11 @@ sub new {
     my $search_path = delete $args{search_path}
         or croak "search_path required";
     my $index_path = delete $args{index_path} or croak "index_path required";
-    my $config     = delete $args{config}     or croak "config required";
+    my $commit_path = delete $args{commit_path}
+        or croak "commit_path required";
+    my $rollback_path = delete $args{rollback_path}
+        or croak "rollback_path required";
+    my $config = delete $args{config} or croak "config required";
     my $version = delete $args{version} || $VERSION;
 
     if ( $req->path ne '/' ) {
@@ -34,7 +38,7 @@ sub new {
             || $req->parameters->{format}
             || $server->engine->default_response_format );
 
-    my ( $search_uri, $index_uri );
+    my ( $search_uri, $index_uri, $commit_uri, $rollback_uri );
     my $uri = delete $args{base_uri} || $req->base;
     $uri =~ s!/$!!;
     if ( $search_path =~ m/^https?:/ ) {
@@ -49,45 +53,91 @@ sub new {
     else {
         $index_uri = $uri . $index_path;
     }
+    if ( $commit_path =~ m/^https?:/ ) {
+        $commit_uri = $uri;
+    }
+    else {
+        $commit_uri = $uri . $commit_path;
+    }
+    if ( $rollback_path =~ m/^https?:/ ) {
+        $rollback_uri = $uri;
+    }
+    else {
+        $rollback_uri = $uri . $rollback_path;
+    }
+
+    my @methods       = $server->engine->get_allowed_http_methods();
+    my $spore_methods = [
+        {   method      => 'GET',
+            path        => "$search_path",
+            params      => [qw( q r c f o s p t u )],
+            required    => [qw( q )],
+            description => 'return search results',
+            base_url    => "$search_uri",
+        },
+        {   method      => 'GET',
+            path        => "$index_path" . '/:doc_uri',
+            params      => [],
+            required    => [],
+            description => 'fetch the content for doc_uri',
+            base_url    => "$index_uri",
+        },
+        {   method      => 'POST',
+            path        => "$index_path" . '/:doc_uri',
+            params      => [],
+            required    => [],
+            description => 'update the index with content for doc_uri',
+            base_url    => "$index_uri",
+        },
+        {   method      => 'PUT',
+            path        => "$index_path" . '/:doc_uri',
+            params      => [],
+            required    => [],
+            description => 'update the index with content for doc_uri',
+            base_url    => "$index_uri",
+        },
+        {   method      => 'DELETE',
+            path        => "$index_path" . '/:doc_uri',
+            params      => [],
+            required    => [],
+            description => 'remove doc_uri from the index',
+            base_url    => "$index_uri",
+        },
+    ];
+    if ( grep { $_ eq 'COMMIT' } @methods ) {
+        push @$spore_methods,
+            {
+            method      => 'POST',
+            path        => "$commit_path",
+            params      => [],
+            required    => [],
+            description => 'complete any pending updates',
+            base_url    => "$commit_uri",
+            };
+    }
+    if ( grep { $_ eq 'ROLLBACK' } @methods ) {
+        push @$spore_methods,
+            {
+            method      => 'POST',
+            path        => "$rollback_path",
+            params      => [],
+            required    => [],
+            description => 'abort any pending updates',
+            base_url    => "$rollback_uri",
+            };
+    }
 
     my $about = {
         name         => 'Dezi',
         author       => 'Peter Karman <karpet@dezi.org>',
         api_base_url => "$uri",
         api_format   => [qw( JSON ExtJS XML )],
-        methods      => [
-            {   method      => 'GET',
-                path        => "$search_path",
-                params      => [qw( q r c f o s p t u)],
-                required    => [qw( q )],
-                description => 'return search results',
-                base_url    => "$search_uri",
-            },
-            {   method      => 'POST',
-                path        => "$index_path" . '/:doc_uri',
-                params      => [],
-                required    => [],
-                description => 'update the index with content for doc_uri',
-                base_url    => "$index_uri",
-            },
-            {   method      => 'PUT',
-                path        => "$index_path" . '/:doc_uri',
-                params      => [],
-                required    => [],
-                description => 'update the index with content for doc_uri',
-                base_url    => "$index_uri",
-            },
-            {   method      => 'DELETE',
-                path        => "$index_path" . '/:doc_uri',
-                params      => [],
-                required    => [],
-                description => 'remove doc_uri from the index',
-                base_url    => "$index_uri",
-            },
-        ],
-        engine => ref( $server->engine ),
-        search => "$search_uri",
-        index  => "$index_uri",
+        methods      => $spore_methods,
+        engine       => ref( $server->engine ),
+        search       => "$search_uri",
+        index        => "$index_uri",
+        commit       => "$commit_uri",
+        rollback     => "$rollback_uri",
         description =>
             'This is a Dezi search server. See http://dezi.org/ for more details.',
         version => $version,

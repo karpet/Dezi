@@ -29,3 +29,6 @@ Revision history for Dezi
 0.001007    21 Aug 2012
     * pod additions and fixes.
     * quote some objects in About to force stringify.
+
+0.001008    xxx
+    * add /commit and /rollback features per Search::OpenSearch::Server 

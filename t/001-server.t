@@ -77,7 +77,7 @@ test_psgi(
             "decode content as JSON" );
 
         #dump $json;
-        is( $res->code, 204, "DELETE ok" );
+        is( $res->code, 200, "DELETE ok" );
     }
 );
 

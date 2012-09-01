@@ -6,7 +6,7 @@ use Plack::Builder;
 use base 'Search::OpenSearch::Server::Plack';
 use Dezi::Server::About;
 
-our $VERSION = '0.001007';
+our $VERSION = '0.001007_01';
 
 sub new {
     my ( $class, %args ) = @_;
@@ -25,12 +25,17 @@ sub new {
 }
 
 sub parse_dezi_config {
-    my $class       = shift;
-    my $config      = shift or croak "config hashref required";
-    my $search_path = delete $config->{search_path} || '/search';
-    my $index_path  = delete $config->{index_path} || '/index';
-    $search_path = "/$search_path" unless $search_path =~ m!^/!;
-    $index_path  = "/$index_path"  unless $index_path  =~ m!^/!;
+    my $class         = shift;
+    my $config        = shift or croak "config hashref required";
+    my $search_path   = delete $config->{search_path} || '/search';
+    my $index_path    = delete $config->{index_path} || '/index';
+    my $commit_path   = delete $config->{commit_path} || '/commit';
+    my $rollback_path = delete $config->{rollback_path} || '/rollback';
+    $search_path   = "/$search_path"   unless $search_path   =~ m!^/!;
+    $index_path    = "/$index_path"    unless $index_path    =~ m!^/!;
+    $commit_path   = "/$commit_path"   unless $commit_path   =~ m!^/!;
+    $rollback_path = "/$rollback_path" unless $rollback_path =~ m!^/!;
+
     my $base_uri = delete $config->{base_uri} || '';
 
     my $server = $class->new( %$config, search_path => $search_path );
@@ -45,12 +50,14 @@ sub parse_dezi_config {
         $admin = $config->{admin_class}->new( $class, $config );
     }
     return {
-        search_path => $search_path,
-        index_path  => $index_path,
-        server      => $server,
-        ui          => $ui,
-        admin       => $admin,
-        base_uri    => $base_uri,
+        search_path   => $search_path,
+        index_path    => $index_path,
+        commit_path   => $commit_path,
+        rollback_path => $rollback_path,
+        server        => $server,
+        ui            => $ui,
+        admin         => $admin,
+        base_uri      => $base_uri,
     };
 }
 
@@ -63,12 +70,26 @@ sub app {
 
         enable "SimpleLogger", level => $config->{'debug'} ? "debug" : "warn";
 
-        enable_if { $_[0]->{REMOTE_ADDR} eq '127.0.0.1' } 
-          "Plack::Middleware::ReverseProxy";
+        enable_if { $_[0]->{REMOTE_ADDR} eq '127.0.0.1' }
+        "Plack::Middleware::ReverseProxy";
 
         # right now these are identical
         mount $dezi_config->{search_path} => $dezi_config->{server};
         mount $dezi_config->{index_path}  => $dezi_config->{server};
+        mount $dezi_config->{commit_path} => sub {
+            my $env = shift;
+            if ( $env->{REQUEST_METHOD} eq 'POST' ) {
+                $env->{REQUEST_METHOD} = 'COMMIT';
+            }
+            $dezi_config->{server}->call($env);
+        };
+        mount $dezi_config->{rollback_path} => sub {
+            my $env = shift;
+            if ( $env->{REQUEST_METHOD} eq 'POST' ) {
+                $env->{REQUEST_METHOD} = 'ROLLBACK';
+            }
+            $dezi_config->{server}->call($env);
+        };
 
         if ( $dezi_config->{ui} ) {
             mount '/ui' => $dezi_config->{ui};
@@ -82,13 +103,15 @@ sub app {
         mount '/' => sub {
             my $req = Plack::Request->new(shift);
             return Dezi::Server::About->new(
-                server      => $dezi_config->{server},
-                request     => $req,
-                search_path => $dezi_config->{search_path},
-                index_path  => $dezi_config->{index_path},
-                config      => $config,
-                version     => $VERSION,
-                base_uri    => $dezi_config->{base_uri},
+                server        => $dezi_config->{server},
+                request       => $req,
+                search_path   => $dezi_config->{search_path},
+                index_path    => $dezi_config->{index_path},
+                commit_path   => $dezi_config->{commit_path},
+                rollback_path => $dezi_config->{rollback_path},
+                config        => $config,
+                version       => $VERSION,
+                base_uri      => $dezi_config->{base_uri},
             );
         };
 
