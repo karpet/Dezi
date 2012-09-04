@@ -10,9 +10,9 @@ requires 'Search::Query'                    => 0.21;
 requires 'Search::Query::Dialect::Lucy'     => 0.05;
 requires 'Lucy'                             => 0.003002;
 requires 'SWISH::Prog'                      => 0.60;
-requires 'Search::OpenSearch::Engine::Lucy' => 0.10;
-requires 'Search::OpenSearch::Server'       => 0.16;
-requires 'Search::OpenSearch'               => 0.18;
+requires 'Search::OpenSearch::Engine::Lucy' => 0.11;
+requires 'Search::OpenSearch::Server'       => 0.17;
+requires 'Search::OpenSearch'               => 0.20;
 requires 'Plack'                            => 0;
 requires 'Module::Load'                     => 0.22;
 requires 'Plack::Middleware::ReverseProxy'  => 0;
@@ -27,5 +27,5 @@ install_script 'bin/dezi';
 WriteMakefile(
     PL_FILES => {},
     dist     => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
-    clean => { FILES => 'Dezi-* dezi.index' },
+    clean => { FILES => 't/test.index Dezi-* dezi.index' },
 );
