@@ -5,7 +5,7 @@ use Carp;
 use JSON;
 use Search::Tools::XML;
 
-our $VERSION = '0.001008';
+our $VERSION = '0.001008_01';
 
 sub new {
     my $class       = shift;
@@ -219,12 +219,20 @@ automatically be notified of progress on your bug as I make changes.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc Dezi
+    perldoc Dezi::About
 
 
 You can also look for information at:
 
 =over 4
+
+=item * Website
+
+L<http://dezi.org/>
+
+=item * IRC
+
+#dezisearch at freenode
 
 =item * Mailing list
 

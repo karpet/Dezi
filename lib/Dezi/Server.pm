@@ -5,66 +5,15 @@ use Carp;
 use Plack::Builder;
 use base 'Search::OpenSearch::Server::Plack';
 use Dezi::Server::About;
+use Dezi::Config;
 
-our $VERSION = '0.001008';
-
-sub new {
-    my ( $class, %args ) = @_;
-
-    # default engine config
-    my $engine_config = $args{engine_config} || {};
-    $engine_config->{type}  ||= 'Lucy';
-    $engine_config->{index} ||= ['dezi.index'];
-    my $search_path = delete $args{search_path};
-    $engine_config->{link} ||= $search_path;
-    $engine_config->{default_response_format} ||= 'JSON';
-    $engine_config->{debug} = $args{debug};
-    $args{engine_config} = $engine_config;
-
-    return $class->SUPER::new(%args);
-}
-
-sub parse_dezi_config {
-    my $class         = shift;
-    my $config        = shift or croak "config hashref required";
-    my $search_path   = delete $config->{search_path} || '/search';
-    my $index_path    = delete $config->{index_path} || '/index';
-    my $commit_path   = delete $config->{commit_path} || '/commit';
-    my $rollback_path = delete $config->{rollback_path} || '/rollback';
-    $search_path   = "/$search_path"   unless $search_path   =~ m!^/!;
-    $index_path    = "/$index_path"    unless $index_path    =~ m!^/!;
-    $commit_path   = "/$commit_path"   unless $commit_path   =~ m!^/!;
-    $rollback_path = "/$rollback_path" unless $rollback_path =~ m!^/!;
-
-    my $base_uri = delete $config->{base_uri} || '';
-
-    my $server = $class->new( %$config, search_path => $search_path );
-
-    my $ui;
-    if ( $config->{ui_class} ) {
-        $ui = $config->{ui_class}
-            ->new( search_path => $search_path, base_uri => $base_uri );
-    }
-    my $admin;
-    if ( $config->{admin_class} ) {
-        $admin = $config->{admin_class}->new( $class, $config );
-    }
-    return {
-        search_path   => $search_path,
-        index_path    => $index_path,
-        commit_path   => $commit_path,
-        rollback_path => $rollback_path,
-        server        => $server,
-        ui            => $ui,
-        admin         => $admin,
-        base_uri      => $base_uri,
-    };
-}
+our $VERSION = '0.001008_01';
 
 sub app {
     my ( $class, $config ) = @_;
 
-    my $dezi_config = $class->parse_dezi_config($config);
+    my $dezi_config
+        = Dezi::Config->new( { %$config, server_class => $class } );
 
     return builder {
 
@@ -73,45 +22,65 @@ sub app {
         enable_if { $_[0]->{REMOTE_ADDR} eq '127.0.0.1' }
         "Plack::Middleware::ReverseProxy";
 
-        # right now these are identical
-        mount $dezi_config->{search_path} => $dezi_config->{server};
-        mount $dezi_config->{index_path}  => $dezi_config->{server};
-        mount $dezi_config->{commit_path} => sub {
-            my $env = shift;
-            if ( $env->{REQUEST_METHOD} eq 'POST' ) {
-                $env->{REQUEST_METHOD} = 'COMMIT';
+        mount $dezi_config->search_path() => $dezi_config->server;
+        mount $dezi_config->index_path()  => builder {
+            if ( defined $dezi_config->authenticator ) {
+                enable "Auth::Basic",
+                    authenticator => $dezi_config->authenticator,
+                    realm         => 'Dezi Indexer';
             }
-            $dezi_config->{server}->call($env);
+            $dezi_config->server;
         };
-        mount $dezi_config->{rollback_path} => sub {
-            my $env = shift;
-            if ( $env->{REQUEST_METHOD} eq 'POST' ) {
-                $env->{REQUEST_METHOD} = 'ROLLBACK';
+        mount $dezi_config->commit_path() => builder {
+            if ( defined $dezi_config->authenticator ) {
+                enable "Auth::Basic",
+                    authenticator => $dezi_config->authenticator,
+                    realm         => 'Dezi Indexer';
             }
-            $dezi_config->{server}->call($env);
+            sub {
+                my $env = shift;
+                if ( $env->{REQUEST_METHOD} eq 'POST' ) {
+                    $env->{REQUEST_METHOD} = 'COMMIT';
+                }
+                $dezi_config->server->call($env);
+            };
+        };
+        mount $dezi_config->rollback_path() => builder {
+            if ( defined $dezi_config->authenticator ) {
+                enable "Auth::Basic",
+                    authenticator => $dezi_config->authenticator,
+                    realm         => 'Dezi Indexer';
+            }
+            sub {
+                my $env = shift;
+                if ( $env->{REQUEST_METHOD} eq 'POST' ) {
+                    $env->{REQUEST_METHOD} = 'ROLLBACK';
+                }
+                $dezi_config->server->call($env);
+            };
         };
 
-        if ( $dezi_config->{ui} ) {
-            mount '/ui' => $dezi_config->{ui};
+        if ( $dezi_config->ui ) {
+            mount $dezi_config->ui_path() => $dezi_config->ui;
         }
 
-        if ( $dezi_config->{admin} ) {
-            mount '/admin' => $dezi_config->{admin};
+        if ( $dezi_config->admin ) {
+            mount $dezi_config->admin_path() => $dezi_config->admin;
         }
 
         # default is just self-description
         mount '/' => sub {
             my $req = Plack::Request->new(shift);
             return Dezi::Server::About->new(
-                server        => $dezi_config->{server},
+                server        => $dezi_config->server,
                 request       => $req,
-                search_path   => $dezi_config->{search_path},
-                index_path    => $dezi_config->{index_path},
-                commit_path   => $dezi_config->{commit_path},
-                rollback_path => $dezi_config->{rollback_path},
+                search_path   => $dezi_config->search_path,
+                index_path    => $dezi_config->index_path,
+                commit_path   => $dezi_config->commit_path,
+                rollback_path => $dezi_config->rollback_path,
                 config        => $config,
                 version       => $VERSION,
-                base_uri      => $dezi_config->{base_uri},
+                base_uri      => $dezi_config->base_uri,
             );
         };
 
@@ -198,12 +167,20 @@ automatically be notified of progress on your bug as I make changes.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc Dezi
+    perldoc Dezi::Server
 
 
 You can also look for information at:
 
 =over 4
+
+=item * Website
+
+L<http://dezi.org/>
+
+=item * IRC
+
+#dezisearch at freenode
 
 =item * Mailing list
 

@@ -16,6 +16,7 @@ requires 'Search::OpenSearch'               => 0.20;
 requires 'Plack'                            => 0;
 requires 'Module::Load'                     => 0.22;
 requires 'Plack::Middleware::ReverseProxy'  => 0;
+requires 'Plack::Middleware::Auth::Basic'   => 0;
 
 perl_version '5.8.3';
 license 'http://dev.perl.org/licenses/';

@@ -32,3 +32,7 @@ Revision history for Dezi
 
 0.001008    3 Sept 2012
     * add /commit and /rollback features per Search::OpenSearch::Server 0.17
+
+0.001009   xxx
+    * refactor all config into Dezi::Config
+    * add optional basic authentication for /index, /commit and /rollback actions
