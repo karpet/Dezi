@@ -132,7 +132,14 @@ Dezi::Config - Dezi server configuration
     #admin           => Dezi::Admin->new(),
     
     base_uri        => '',
-    server_class    => 'Dezi::Server',    
+    server_class    => 'Dezi::Server',
+    
+    # authentication for non-idempotent requests.
+    # if both username && password are defined,
+    # then /index, /commit and /rollback require
+    # basic authentication credentials.
+    username        => 'someone',
+    password        => 'somesecret',
     
     # optional
     stats_logger => Dezi::Stats->new(
@@ -193,7 +200,7 @@ Dezi::Config - Dezi server configuration
             find_relevant_fields => 1,
         },
 
-        # cache facets for speed-up
+        # cache facets for speed-up.
         # this is the Search::OpenSearch default setting
         cache => CHI->new(
             driver           => 'File',
