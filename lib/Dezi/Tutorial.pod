@@ -18,9 +18,9 @@ Install the Dezi client from CPAN:
 
 Start the Dezi server:
 
- % dezi &
+ % dezi
 
-Add a small test document to the index:
+In a separate terminal, add a small test document to the index:
 
  % echo '<doc><title>bar</title>hello world</doc>' > test.xml
  % dezi-client test.xml
