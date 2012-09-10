@@ -31,28 +31,95 @@ Search the index to confirm your test document worked:
  
 =head1 Intermediate
 
-Index your document collection with the B<swish3> command that
+The Intermediate tutorial details the specifics behind the Dezi
+demo available at L<http://dezi.org/demo>.
+
+=head2 Download the Reuters corpus
+
+The Reuters News Corpus for Text Classification (Reuters-21578)
+is a common document corpus used for information retrieval projects.
+Other document collections have become more popular since the
+Reuters corpus first appeared (e.g. Wikipedia database) but
+the Reuters corpus is a nice, medium sized collection for demonstrating
+Dezi.
+
+You can find the corpus many places on the internet. The version
+used for the demo came from L<http://svn.peknet.com/search_bench/>.
+The C<2xml.pl> script at that URL will convert the original SGML
+documents to valid XML and split them into about 21k individual documents.
+
+Unpack the tar.gz file somewhere and run the C<2xml.pl> script as described
+in the script's comments.
+
+=head2 Create a Swish3 configuration file
+
+As described in L<Dezi::Architecture>, Dezi is based on Swish3
+L<http://swish-e.org/swish3/>. You can index the Reuters corpus
+with the B<swish3> command that
 comes with SWISH::Prog (one of the Dezi dependencies).
 
- % swish3 -c path/to/swish.conf -F lucy -f path/to/index -i path/to/docs
+First, you'll need a configuration file. Here's the one used
+for the Dezi demo:
 
-Start the Dezi server, using a custom config pointing to 
-the index you just created:
+ DefaultContents XML*
+ StoreDescription XML* <text> 10000
+ PropertyNameAlias swishtitle title
+ MetaNames dates topics people places orgs author swishdocpath
+ PropertyNames dates topics people places orgs author dateline
+ FuzzyIndexingMode Stemming_en1
 
- % cat myconfig.pl
- my $conf = {
-    engine_config => {
-        # name of the index(es)
-        index => [qw( path/to/index )],
-    }
- };
+Save the file as C<swish.conf>.
+
+More details on Swish3 configuration can be found
+at L<http://swish-e.org/docs/swish-config.html>.
+
+=head2 Index the XML
+
+If your Reuters docs are in a directory called C<reuters>,
+you can create an index with a command like:
+
+ % swish3 -c swish.conf -F lucy -f dezi.index -i reuters
  
- % dezi --dezi-config myconfig.pl &
+You can index all kinds of document types, not just XML, but for
+the purposes of this tutorial, we'll keep it simple.
 
-Search the index containing text from I<path/to/docs>.
+=head2 Create a Dezi configuration file
+
+Here's the contents of the demo config file, named C<dezi.config.pl>:
+
+ {
+    engine_config => {
+        facets => { names => [qw( topics people places orgs author )] },
+    },
+    ui_class    => 'Dezi::UI',
+    base_uri    => 'http://dezi.org/demo',
+    username    => 'deziuser',
+    password    => 'a-secret',
+ }
+
+B<NOTE> that the username/password is there to prevent unwanted
+modification of the index. Since Dezi supports POST, PUT and DELETE
+HTTP actions on an index, it's a good idea to protect an index,
+particularly if it is on the open internet.
+
+B<NOTE> too the C<Dezi::UI> class is enabled. That requires a separate
+installation from CPAN.
+
+ % cpan -i Dezi::UI
+
+=head2 Start the Dezi server
+ 
+ % dezi --dezi-config dezi.config.pl
+
+From a separate terminal, you can search the index containing text from the Reuters
+corpus:
 
  % dezi-client -q 'some words'
- 
+
+Thanks to the Dezi::UI module, you can also search via a web browser. Assuming
+you are running the demo on a local machine, you can point your browser at
+L<http://localhost:5000/ui> and explore the index contents graphically.
+
 =head1 Advanced
 
 Write your own client application. See L<Dezi::Client> and the C<bin/dezi-client>
