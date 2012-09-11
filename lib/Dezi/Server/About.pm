@@ -20,7 +20,9 @@ sub new {
     my $rollback_path = delete $args{rollback_path}
         or croak "rollback_path required";
     my $config = delete $args{config} or croak "config required";
-    my $version = delete $args{version} || $VERSION;
+    my $version    = delete $args{version} || $VERSION;
+    my $admin_path = delete $args{admin_path};
+    my $ui_path    = delete $args{ui_path};
 
     if ( $req->path ne '/' ) {
         my $resp = 'Resource not found';
@@ -150,11 +152,11 @@ sub new {
     };
     if ( $config->{ui_class} ) {
         $about->{ui_class} = $config->{ui_class};
-        $about->{ui}       = $uri . '/ui';
+        $about->{ui}       = $uri . $ui_path;
     }
     if ( $config->{admin_class} ) {
         $about->{admin_class} = $config->{admin_class};
-        $about->{admin}       = $uri . '/admin';
+        $about->{admin}       = $uri . $admin_path;
     }
     my $resp
         = $format eq 'json'

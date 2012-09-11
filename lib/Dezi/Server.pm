@@ -78,6 +78,8 @@ sub app {
                 index_path    => $dezi_config->index_path,
                 commit_path   => $dezi_config->commit_path,
                 rollback_path => $dezi_config->rollback_path,
+                admin_path    => $dezi_config->admin_path,
+                ui_path       => $dezi_config->ui_path,
                 config        => $config,
                 version       => $VERSION,
                 base_uri      => $dezi_config->base_uri,
