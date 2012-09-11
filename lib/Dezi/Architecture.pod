@@ -50,7 +50,7 @@ Dezi implements a HTTP-based search server with a REST
 orientation. 
 
 The name C<Dezi> was chosen because it is short and easy to pronounce.
-Search::OpenSearch::Server::Plack is a mouthful. I was inspired
+L<Search::OpenSearch::Server::Plack> is a mouthful. I was inspired
 by the L<Starman> naming rationale, and I used to watch a lot
 of black-and-white TV re-runs as a kid.
 
@@ -58,13 +58,13 @@ of black-and-white TV re-runs as a kid.
 
 Dezi is a short name with a long list of dependencies.
 
-Dezi integrates the Search::OpenSearch set of modules
-with Swish3 and Apache Lucy.
+Dezi integrates the L<Search::OpenSearch> set of modules
+with Swish3 and Apache L<Lucy>.
 
-The primary dependency is Search::OpenSearch::Server::Plack,
-which Dezi::Server subclasses directly.
+The primary dependency is L<Search::OpenSearch::Server::Plack>,
+which L<Dezi::Server> subclasses directly.
 
-Search::OpenSearch::Server::Plack is a L<Plack::Component> that
+L<Search::OpenSearch::Server::Plack> is a L<Plack::Component> that
 implements some basic HTTP request handling and delegates
 most of the hard work to a L<Search::OpenSearch::Engine>,
 in our case L<Search::OpenSearch::Engine::Lucy>.
@@ -76,24 +76,24 @@ L<SWISH::Prog::Lucy::Indexer>.
 
 All the L<SWISH::Prog> components
 together form an ecosystem known as B<Swish3>.
-B<Swish3> is the third major version of Swish-e(L<http://swish-e.org/>).
+Swish3 is the third major version of Swish-e (L<http://swish-e.org/>).
 The L<SWISH::3> module is a Perl binding to the libswish3 C library.
 L<SWISH::3> is primarily a document parser, built on top of libxml2.
 
-Apache Lucy (L<http://lucy.apache.org/>) is the underlying 
+Apache L<Lucy> (L<http://lucy.apache.org/>) is the underlying 
 information retrieval library. It
-does all the hard work. Everything else about Dezi is built on top of Lucy
+does all the hard work. Everything else is built on top of or extends Lucy
 with the intent of making the out-of-the-box experience as
 painless as possible, and filling in some of the usability gaps.
 
 Keep one thing in mind: the only web-specific pieces of Dezi
 are the Plack components. Everything else is transport-agnostic.
 For example, the B<swish3> command (mentioned in the L<Dezi::Tutorial>)
-comes with SWISH::Prog, and uses the same SWISH::Prog::Lucy modules
+comes with L<SWISH::Prog>, and uses the same L<SWISH::Prog::Lucy> modules
 to index and search that Dezi does. Dezi is a REST server version
 of the B<swish3> command-line tool.
 
-if that didn't make things any clearer, go back and read this
+If that didn't make things any clearer, go back and read this
 section again. Even if it doesn't get clearer, the module
 names will at least start to become more familiar.
 
