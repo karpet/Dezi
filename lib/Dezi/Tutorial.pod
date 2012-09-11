@@ -14,7 +14,7 @@ Install the Dezi client from CPAN:
 
  % cpan -i Dezi::Client
 
-=head1 Beginner
+=head1 Beginner - Hello World
 
 Start the Dezi server:
 
@@ -29,7 +29,7 @@ Search the index to confirm your test document worked:
 
  % dezi-client -q bar
  
-=head1 Intermediate
+=head1 Intermediate - The Dezi Demo
 
 The Intermediate tutorial details the specifics behind the Dezi
 demo available at L<http://dezi.org/demo>.
@@ -89,7 +89,9 @@ Here's the contents of the demo config file, named C<dezi.config.pl>:
 
  {
     engine_config => {
-        facets => { names => [qw( topics people places orgs author )] },
+        facets => { 
+            names => [qw( topics people places orgs author )] 
+        },
     },
     ui_class    => 'Dezi::UI',
     base_uri    => 'http://dezi.org/demo',
@@ -120,13 +122,60 @@ Thanks to the Dezi::UI module, you can also search via a web browser. Assuming
 you are running the demo on a local machine, you can point your browser at
 L<http://localhost:5000/ui> and explore the index contents graphically.
 
-=head1 Advanced
+=head1 Advanced - Roll Your Own
 
-Write your own client application. See L<Dezi::Client> and the C<bin/dezi-client>
-script for examples.
+=head2 Write your own client application
 
-See the t/example-config.pl file in the Dezi distribution for a full
-example configuration file.
+ % cat indexer.pl
+
+ #!/usr/bin/env perl
+ use strict;
+ use warnings;
+ 
+ use Dezi::Client;
+ use File::Find;
+ 
+ my $client = Dezi::Client->new( 
+    server => 'http://localhost:5000' 
+ );
+ 
+ find({ 
+    wanted      => \&add_to_index, 
+    follow      => 1, 
+    no_chdir    => 1,
+ }, @ARGV);
+ 
+ my $resp = $client->commit();
+
+ print $resp->content;
+
+ sub add_to_index {
+    my $file = $File::Find::name;
+    
+    # we only want .xml files
+    return unless $file =~ m/\.xml$/;
+    
+    my $resp = $client->index($file);
+    if (!$resp->is_success) {
+        die "Failed to index $file: " . $resp->status_line;
+    }
+ }
+
+=head2 Start your Dezi server
+
+ % dezi 
+
+=head2 Run your indexer
+
+In a separate terminal:
+
+ % perl indexer.pl path/to/xml/docs
+
+=head2 Search with dezi-client
+
+After you're done indexing, look for something:
+
+ % dezi-client -q foo
 
 =head1 AUTHOR
 
@@ -190,7 +239,7 @@ See http://dev.perl.org/licenses/ for more information.
 
 =head1 SEE ALSO
 
-L<Search::OpenSearch>, L<SWISH::3>, L<SWISH::Prog::Lucy>,
+L<Dezi::Client>, L<Search::OpenSearch>, L<SWISH::3>, L<SWISH::Prog::Lucy>,
 L<Plack>, L<Lucy>
 
 =cut
