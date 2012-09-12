@@ -5,7 +5,7 @@ use strict;
 use Plack::Runner;
 use Module::Load;
 
-our $VERSION = '0.001006';
+our $VERSION = '0.002001';
 
 sub version {
     print "$VERSION\n";
@@ -122,6 +122,8 @@ I<file> can be in any format supported by Config::Any.
 The structure expected contains a key called C<engine_config>
 which is passed directly to Search::OpenSearch::Server::Plack,
 which in turn passes through to Search::OpenSearch::Engine.
+
+See L<Dezi::Config>.
 
 Example (in native Perl format):
 
