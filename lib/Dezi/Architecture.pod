@@ -27,19 +27,16 @@ Dezi::Architecture - all about the Dezi innards
 
 This document describes the Dezi architecture. 
 
-Some assumptions are made. 
-
-One, the Apache Lucy library is used via
-L<Search::OpenSearch::Engine::Lucy>. Lucy has the most support
-and is the default engine type for Dezi. In theory,
-any L<Search::OpenSearch::Engine> subclass could work,
+The chief assumption in this document is
+that you are using the Apache L<Lucy> library (L<http://lucy.apache.org/>) 
+backend via L<Search::OpenSearch::Engine::Lucy>. 
+Lucy is the default engine type for Dezi. 
+In theory, any L<Search::OpenSearch::Engine> subclass could work,
 though not all have full REST support.
 
-Two, this document assumes the reader is familiar with
-object-oriented Perl.
-
-Three, this document assumes some familiarity with information
-retrieval terms and concepts.
+The other assumptions are that you have some understanding
+of the HTTP/1.1 protocol, and some understanding of object-oriented
+software design, particularly in Perl.
 
 =head1 BACKGROUND
 
@@ -77,8 +74,8 @@ L<SWISH::Prog::Lucy::Indexer>.
 All the L<SWISH::Prog> components
 together form an ecosystem known as B<Swish3>.
 Swish3 is the third major version of Swish-e (L<http://swish-e.org/>).
-The L<SWISH::3> module is a Perl binding to the libswish3 C library.
-L<SWISH::3> is primarily a document parser, built on top of libxml2.
+The L<SWISH::3> module is a Perl binding to the libswish3 C library,
+which is primarily a document parser built on top of libxml2.
 
 Apache L<Lucy> (L<http://lucy.apache.org/>) is the underlying 
 information retrieval library. It
@@ -111,9 +108,69 @@ the documentation specific to each component for
 particular options. Those components should be
 noted in the L<Dezi::Config> SYNOPSIS.
 
-=head1 LIFECYCLE
+=head1 REST
 
- TODO
+Dezi's architecture is oriented toward the
+REpresentational State Transfer (REST) model. See
+L<http://en.wikipedia.org/wiki/Representational_state_transfer>.
+
+You should interpret "oriented toward" as a subtle caveat that
+Dezi doesn't claim to be purely RESTful in its implementation.
+While most REST constraints are respected and supported, there are certain
+optional optimizations that violate one or more
+of the REST constraints. 
+
+For example, the C<auto_commit> Engine feature,
+which gives the ability to COMMIT or
+ROLLBACK one or more POST requests, could be said to violate
+the Stateless REST constraint. In its transaction implementation,
+Dezi follows a more RPC-style
+model with REST-like semantics (i.e., you can use the
+COMMIT or ROLLBACK HTTP method, which is neither part of the
+HTTP spec nor RESTful, but which does emphasize the noun/verb
+separation of HTTP method and URI).
+
+Strong emphasis is put on exercising the full HTTP/1.1 specification, 
+including the use of HTTP methods to indicate server actions
+and proper (we hope!) HTTP response codes.
+ 
+=head1 REQUEST
+
+An incoming HTTP request is parsed and routed according to its method.
+GET requests are always idempotent. POST, PUT and DELETE requests are not:
+they can alter the state of resources on the server.
+
+The following examples show how Dezi interprets requests:
+
+ GET      /search?q=foo    # return search results for 'foo'
+ POST     /index/foo       # add or update document 'foo'
+ PUT      /index/foo       # add (only) document 'foo'
+ GET      /index/foo       # return document 'foo'
+ DELETE   /index/foo       # remove document 'foo'
+ COMMIT   /index           # write pending changes
+ POST     /commit          # same as COMMIT /index
+ ROLLBACK /index           # abort pending changes
+ POST     /rollback        # same as ROLLBACK /index
+ GET      /ui              # return Dezi::UI HTML
+
+The actual paths are configurable. See L<Dezi::Config>.
+
+=head1 RESPONSE
+
+Dezi delegates all search responses to Search::OpenSearch::Response objects.
+The default response type is JSON. You can use the 't' GET param
+to change that type per-request, or use the C<default_response_format>
+engine configuration option to set the default. See L<Dezi::Config>,
+L<Search::OpenSearch::Engine> and L<Search::OpenSearch::Response>.
+
+All non-idempotent responses use the JSON format, and indicate
+both the C<success> boolean and C<code> HTTP status as part of the
+JSON string.
+
+=head1 FEEDBACK
+
+The evolution of the Dezi application is ongoing and I welcome your
+feedback. See the SUPPORT section below for how to get involved.
 
 =head1 AUTHOR
 

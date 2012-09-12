@@ -68,8 +68,8 @@ Peter Karman, C<< <karman at cpan.org> >>
 
 =head1 ACKNOWLEDGEMENTS
 
-Much of the code upon which Dezi relies
-was originally developed for the 
+Many of the code ideas in Dezi were developed
+while working on search-related projects for the
 Public Insight Network at American Public Media.
 L<http://www.publicinsightnetwork.org>.
 
