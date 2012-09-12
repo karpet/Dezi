@@ -239,7 +239,7 @@ Dezi::Config - Dezi server configuration
 =head1 DESCRIPTION
 
 Dezi::Config parses configuration settings, applies default values,
-and instantiates component objects for Dezi::Server. 
+and instantiates component objects for L<Dezi::Server>. 
 
 Mostly this class exists in order to document, in one location, 
 all the options available for the Dezi server. 
@@ -250,7 +250,7 @@ contents are parsed by Dezi::Config and applied to the server application.
 The SYNOPSIS section provides all the default configuration values,
 with comments indicating where more complete documentation may
 be available for the relevant components. The rest of the documentation
-below is specific to this class and probably <Bnot> what you're looking for
+below is specific to this class and probably B<not> what you're looking for
 as a Dezi user.
 
 =head1 METHODS
@@ -276,14 +276,14 @@ methods on the object returned from new():
 
 =head2 apply_default_engine_config( I<hashref> )
 
-Default Search::OpenSearch::Engine options are applied directly to I<hashref>.
+Default L<Search::OpenSearch::Engine> options are applied directly to I<hashref>.
 This method is called internally by new().
 
 =head2 authenticator
 
 If I<username> and I<password> are passed to new(),
 the authenticator() method will return a CODE ref for passing
-to Plack::Middleware::Auth::Basic.
+to L<Plack::Middleware::Auth::Basic>.
 
 =head2 as_hash
 

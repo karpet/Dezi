@@ -12,9 +12,9 @@ Dezi::Architecture - all about the Dezi innards
        ->hasa Search::OpenSearch::Engine::Lucy 
          ->hasa SWISH::Prog::Lucy::Indexer 
            ->hasa Lucy::Index::Indexer
-         ->hasa SWISH::Prog::Searcher 
+         ->hasa SWISH::Prog::Lucy::Searcher 
            ->hasa Lucy::Search::PolySearcher
-         ->returns Search::OpenSearch::Response
+   ->returns Search::OpenSearch::Response
 
  Search::OpenSearch::Engine::Lucy
   ->uses Search::Tools::QueryParser
@@ -157,8 +157,8 @@ The actual paths are configurable. See L<Dezi::Config>.
 
 =head1 RESPONSE
 
-Dezi delegates all search responses to Search::OpenSearch::Response objects.
-The default response type is JSON. You can use the 't' GET param
+Dezi delegates all search responses to L<Search::OpenSearch::Response> objects.
+The default response type is JSON. You can use the C<t> GET param
 to change that type per-request, or use the C<default_response_format>
 engine configuration option to set the default. See L<Dezi::Config>,
 L<Search::OpenSearch::Engine> and L<Search::OpenSearch::Response>.

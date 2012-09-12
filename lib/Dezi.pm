@@ -24,15 +24,15 @@ Add a document B<foo> to the index:
    -d '<doc><title>bar</title>hello world</doc>' \
    -H 'Content-Type: application/xml'
    
-Search the index:
+Search the index for B<bar>:
 
  % curl 'http://localhost:5000/search?q=bar&t=JSON'
  % curl 'http://localhost:5000/search?q=bar&t=XML'
 
 =head1 DESCRIPTION
 
-Dezi is a search platform based on Apache Lucy, Swish3,
-Search::OpenSearch and Search::Query. 
+Dezi is a search platform based on Apache L<Lucy>, Swish3,
+L<Search::OpenSearch> and L<Search::Query>. 
 
 Dezi integrates several CPAN search libraries into one
 easy-to-use interface.
@@ -49,6 +49,10 @@ the L<Dezi::Tutorial>
 =item
 
 the L<Dezi::Server> class documentation
+
+=item
+
+the L<Dezi::Architecture>
 
 =item
 
