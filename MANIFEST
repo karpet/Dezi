@@ -10,6 +10,7 @@ lib/Dezi.pm
 lib/Dezi/Config.pm
 lib/Dezi/Server.pm
 lib/Dezi/Server/About.pm
+lib/Dezi/Architecture.pod
 lib/Dezi/Tutorial.pod
 Makefile.PL
 MANIFEST

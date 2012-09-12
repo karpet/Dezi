@@ -17,7 +17,7 @@ use Plack::Util::Accessor qw(
     authenticator
 );
 
-our $VERSION = '0.001008_01';
+our $VERSION = '0.002000';
 
 sub new {
     my $class         = shift;
@@ -142,6 +142,7 @@ Dezi::Config - Dezi server configuration
     password        => 'somesecret',
     
     # optional
+    # see Dezi::Stats
     stats_logger => Dezi::Stats->new(
         type        => 'DBI',
         dsn         => 'DBI::mysql:database=mydb;host=localhost;port=3306',
@@ -149,8 +150,11 @@ Dezi::Config - Dezi server configuration
         password    => 'mysecret',
     ),
     
+    # see Search::OpenSearch::Engine
     engine_config => {
 
+        default_response_format => 'JSON',
+        
         # could be any Search::OpenSearch::Engine::* class
         type    => 'Lucy',
 
@@ -169,6 +173,9 @@ Dezi::Config - Dezi server configuration
         # options passed to indexer defined by Engine type (above)
         # defaults to SWISH::Prog::Lucy::Indexer->new
         indexer_config => {
+        
+            # see SWISH::Prog::Config
+            # and http://swish-e.org/docs/swish-config.html
             config => { 
 
                 # searchable fields
@@ -222,7 +229,7 @@ Dezi::Config - Dezi server configuration
         # see Search::Tools::HiLiter
         hiliter_config => { class => 'h', tag => 'b' },
 
-        # see Search::Query::Parser
+        # see Search::Tools::QueryParser
         parser_config => {},
 
     }
