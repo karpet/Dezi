@@ -5,7 +5,7 @@ use Carp;
 use JSON;
 use Search::Tools::XML;
 
-our $VERSION = '0.002000';
+our $VERSION = '0.002001';
 
 sub new {
     my $class       = shift;
@@ -194,6 +194,13 @@ Dezi::Server::About - Dezi server introspection metadata
 
 Dezi::Server::About allows a Dezi::Server to introspect,
 and returns an object describing the server.
+
+The About response is what you get, in JSON format, when you issue
+a GET request to the Dezi root path. It allows
+client applications to find out details about
+the server, including what methods are available
+and which URI paths should be used for searching
+and indexing.
 
 This class is used internally by Dezi::Server.
 
