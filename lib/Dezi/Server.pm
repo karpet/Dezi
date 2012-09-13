@@ -135,25 +135,16 @@ and L<Search::OpenSearch::Server::Plack>.
 
 =head1 METHODS
 
-Dezi::Server is a subclass of Search::OpenSearch::Server::Plack.
-It isa Plack::Middleware. Only new methods are overridden.
+Dezi::Server is a subclass of L<Search::OpenSearch::Server::Plack>.
+Only new methods are overridden.
 
-=head2 new([ engine_config => $config_hashref ])
+=head2 app( I<config> )
 
-Returns an instance of the server.
+Class method that uses L<Plack::Builder> to construct the server
+application. I<config> should be a hashref that is converted
+internally to a L<Dezi::Config> object.
 
-=head2 app( I<opts> )
-
-The Plack::Builder construction, class method. Called within the Plack
-server. Override this method in a subclass to change the basic application
-definition.
-
-=head2 parse_dezi_config( I<config> )
-
-Returns hashref of values culled from I<config> including a server instance.
-Used internally by app().
-
-=cut
+Returns the Plack $app via the L<Plack::Builder> builder() function.
 
 =head1 AUTHOR
 
