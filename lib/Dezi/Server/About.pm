@@ -195,7 +195,7 @@ Dezi::Server::About - Dezi server introspection metadata
 Dezi::Server::About allows a Dezi::Server to introspect,
 and returns an object describing the server.
 
-This class is used internally Dezi::Server.
+This class is used internally by Dezi::Server.
 
 =head1 METHODS
 
@@ -221,7 +221,7 @@ automatically be notified of progress on your bug as I make changes.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc Dezi::About
+    perldoc Dezi::Server::About
 
 
 You can also look for information at:
