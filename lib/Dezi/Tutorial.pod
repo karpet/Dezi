@@ -56,7 +56,7 @@ in the script's comments.
 As described in L<Dezi::Architecture>, Dezi is based on Swish3
 L<http://swish-e.org/swish3/>. You can index the Reuters corpus
 with the B<swish3> command that
-comes with SWISH::Prog (one of the Dezi dependencies).
+comes with L<SWISH::Prog> (one of the Dezi dependencies).
 
 First, you'll need a configuration file. Here's the one used
 for the Dezi demo:
