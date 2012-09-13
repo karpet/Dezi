@@ -37,3 +37,6 @@ Revision history for Dezi
     * refactor all config into Dezi::Config
     * add optional basic authentication for /index, /commit and /rollback actions
     * add Architecture doc, flesh out Tutorial doc.
+
+0.002001   12 Sept 2012
+    * documentation fixes
