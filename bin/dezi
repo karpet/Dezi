@@ -97,8 +97,8 @@ Search the index:
 
 =head1 DESCRIPTION
 
-Dezi is a search platform based on Apache Lucy, Swish3, Plack,
-Search::OpenSearch and Search::Query. 
+Dezi is a search platform based on Apache L<Lucy>, Swish3, L<Plack>,
+L<Search::OpenSearch> and L<Search::Query>. 
 
 Dezi integrates several CPAN search libraries into one
 easy-to-use interface.
@@ -108,7 +108,7 @@ place to start.
 
 =head1 OPTIONS
 
-The dezi app supports all the options that Plack::Runner supports.
+The dezi app supports all the options that L<Plack::Runner> supports.
 See the L<plackup> perldoc for a description. The following
 options are specific to dezi.
 
@@ -120,8 +120,8 @@ Turns on verbosity in stderr Plack logging.
 
 I<file> can be in any format supported by Config::Any.
 The structure expected contains a key called C<engine_config>
-which is passed directly to Search::OpenSearch::Server::Plack,
-which in turn passes through to Search::OpenSearch::Engine.
+which is passed directly to L<Search::OpenSearch::Server::Plack>,
+which in turn passes through to L<Search::OpenSearch::Engine>.
 
 See L<Dezi::Config>.
 
