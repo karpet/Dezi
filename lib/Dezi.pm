@@ -28,6 +28,10 @@ Search the index for B<bar>:
 
  % curl 'http://localhost:5000/search?q=bar&t=JSON'
  % curl 'http://localhost:5000/search?q=bar&t=XML'
+ 
+Read the usage statement:
+
+ % dezi -h
 
 =head1 DESCRIPTION
 
@@ -53,11 +57,6 @@ the L<Dezi::Server> class documentation
 =item
 
 the L<Dezi::Architecture>
-
-=item
-
-the L<dezi> command line tool perldoc, which includes details
-about the configuration file format.
 
 =item
 

@@ -179,7 +179,7 @@ if you want to create your own server subclass of Dezi::Server.
 
 =head2 ui-class I<class_name>
 
-Use I<class_name> as a middleware mounted under C</ui>.
+Use I<class_name> as a Plack app mounted under C</ui>.
 Try L<Dezi::UI> as an example.
 
 =head2 admin-class I<class_name>
