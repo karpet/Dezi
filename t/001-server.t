@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use Test::More tests => 16;
+use Test::More tests => 19;
 use Plack::Test;
 use HTTP::Request;
 use JSON;
@@ -25,6 +25,27 @@ test_psgi(
         my $res = $cb->($req);
         is( $res->content, qq/'q' required/, "missing 'q' param" );
         is( $res->code, 400, "bad request status" );
+    }
+);
+
+test_psgi(
+    app    => $app,
+    client => sub {
+        my $cb = shift;
+        my $req = HTTP::Request->new( PUT => 'http://localhost/s/foo/bar' );
+        $req->content_type('application/xml');
+        $req->content('<doc><title>i am a test</title></doc>');
+        $req->content_length( length( $req->content ) );
+        my $res = $cb->($req);
+
+        #dump $res;
+        #diag( $res->content );
+        ok( my $json = decode_json( $res->content ),
+            "decode content as JSON" );
+
+        #dump $json;
+        is( $json->{success}, 0,   "405 json response has success=0" );
+        is( $res->code,       405, "PUT not allowed to /s" );
     }
 );
 

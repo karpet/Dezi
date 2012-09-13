@@ -40,3 +40,9 @@ Revision history for Dezi
 
 0.002001   12 Sept 2012
     * documentation fixes
+
+0.002002   13 Sept 2012
+    * fix security issue with non-idempotent requests to /search URL app,
+      bypassing authentication on the /index URL app.
+      Dezi::Config now has a search_server instance and an index_server instance
+      instead of a single server instance. Requires Search::OpenSearch::Server 0.19.

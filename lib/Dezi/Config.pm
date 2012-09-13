@@ -13,11 +13,12 @@ use Plack::Util::Accessor qw(
     ui
     admin
     base_uri
-    server
+    search_server
+    index_server
     authenticator
 );
 
-our $VERSION = '0.002001';
+our $VERSION = '0.002002';
 
 sub new {
     my $class         = shift;
@@ -56,7 +57,14 @@ sub new {
     }
 
     load $server_class;
-    my $server = $server_class->new(
+    my $search_server = $server_class->new(
+        %$config,
+        engine_config => $class->apply_default_engine_config(
+            { %$config, search_path => $search_path }
+        ),
+        http_allow => [qw( GET )],
+    );
+    my $index_server = $server_class->new(
         %$config,
         engine_config => $class->apply_default_engine_config(
             { %$config, search_path => $search_path }
@@ -72,7 +80,8 @@ sub new {
         ui            => $ui,
         admin         => $admin,
         base_uri      => $base_uri,
-        server        => $server,
+        search_server => $search_server,
+        index_server  => $index_server,
         authenticator => (
             ( defined $username and defined $password )
             ? sub {
@@ -272,6 +281,8 @@ methods on the object returned from new():
     ui
     admin
     base_uri
+    search_server
+    index_server
 
 
 =head2 apply_default_engine_config( I<hashref> )

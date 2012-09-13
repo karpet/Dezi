@@ -7,7 +7,7 @@ use base 'Search::OpenSearch::Server::Plack';
 use Dezi::Server::About;
 use Dezi::Config;
 
-our $VERSION = '0.002001';
+our $VERSION = '0.002002';
 
 sub app {
     my ( $class, $config ) = @_;
@@ -22,14 +22,14 @@ sub app {
         enable_if { $_[0]->{REMOTE_ADDR} eq '127.0.0.1' }
         "Plack::Middleware::ReverseProxy";
 
-        mount $dezi_config->search_path() => $dezi_config->server;
+        mount $dezi_config->search_path() => $dezi_config->search_server;
         mount $dezi_config->index_path()  => builder {
             if ( defined $dezi_config->authenticator ) {
                 enable "Auth::Basic",
                     authenticator => $dezi_config->authenticator,
                     realm         => 'Dezi Indexer';
             }
-            $dezi_config->server;
+            $dezi_config->index_server;
         };
         mount $dezi_config->commit_path() => builder {
             if ( defined $dezi_config->authenticator ) {
@@ -42,7 +42,7 @@ sub app {
                 if ( $env->{REQUEST_METHOD} eq 'POST' ) {
                     $env->{REQUEST_METHOD} = 'COMMIT';
                 }
-                $dezi_config->server->call($env);
+                $dezi_config->index_server->call($env);
             };
         };
         mount $dezi_config->rollback_path() => builder {
@@ -56,7 +56,7 @@ sub app {
                 if ( $env->{REQUEST_METHOD} eq 'POST' ) {
                     $env->{REQUEST_METHOD} = 'ROLLBACK';
                 }
-                $dezi_config->server->call($env);
+                $dezi_config->index_server->call($env);
             };
         };
 
@@ -72,7 +72,7 @@ sub app {
         mount '/' => sub {
             my $req = Plack::Request->new(shift);
             return Dezi::Server::About->new(
-                server        => $dezi_config->server,
+                server        => $dezi_config->index_server,
                 request       => $req,
                 search_path   => $dezi_config->search_path,
                 index_path    => $dezi_config->index_path,

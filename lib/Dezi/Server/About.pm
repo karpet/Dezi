@@ -5,7 +5,7 @@ use Carp;
 use JSON;
 use Search::Tools::XML;
 
-our $VERSION = '0.002001';
+our $VERSION = '0.002002';
 
 sub new {
     my $class       = shift;
@@ -75,6 +75,13 @@ sub new {
             params      => [qw( q r c f o s p t u )],
             required    => [qw( q )],
             description => 'return search results',
+            base_url    => "$search_uri",
+        },
+        {   method      => 'GET',
+            path        => "$search_path" . '/:doc_uri',
+            params      => [],
+            required    => [],
+            description => 'fetch the content for doc_uri',
             base_url    => "$search_uri",
         },
         {   method      => 'GET',
