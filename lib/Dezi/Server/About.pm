@@ -140,7 +140,7 @@ sub new {
         name         => 'Dezi',
         author       => 'Peter Karman <karpet@dezi.org>',
         api_base_url => "$uri",
-        api_format   => [qw( JSON ExtJS XML )],
+        api_format   => [qw( JSON ExtJS XML Tiny )],
         methods      => $spore_methods,
         engine       => ref( $server->engine ),
         search       => "$search_uri",
