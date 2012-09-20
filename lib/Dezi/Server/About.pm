@@ -5,7 +5,7 @@ use Carp;
 use JSON;
 use Search::Tools::XML;
 
-our $VERSION = '0.002002';
+our $VERSION = '0.002002_01';
 
 sub new {
     my $class       = shift;
@@ -72,7 +72,7 @@ sub new {
     my $spore_methods = [
         {   method      => 'GET',
             path        => "$search_path",
-            params      => [qw( q r c f o s p t u )],
+            params      => [qw( q r c f o s p t u x L )],
             required    => [qw( q )],
             description => 'return search results',
             base_url    => "$search_uri",
