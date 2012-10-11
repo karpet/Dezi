@@ -15,6 +15,7 @@ my $preload_app;
 my $dezi_config_file;
 my $server_class = 'Dezi::Server';
 my $debug;
+my $use_ui;
 my $ui_class;
 my $admin_class;
 
@@ -23,6 +24,7 @@ Getopt::Long::Configure( "no_ignore_case", "no_auto_abbrev", "pass_through" );
 Getopt::Long::GetOptions(
     "preload-app"    => \$preload_app,
     "dezi-config=s"  => \$dezi_config_file,
+    "ui"             => \$use_ui,
     "ui-class=s"     => \$ui_class,
     "admin-class=s"  => \$admin_class,
     "server-class=s" => \$server_class,
@@ -52,6 +54,9 @@ if ($dezi_config_file) {
 }
 
 $config->{debug} = $debug;
+if ($use_ui) {
+    $ui_class ||= 'Dezi::UI';
+}
 $config->{ui_class}    ||= $ui_class;
 $config->{admin_class} ||= $admin_class;
 
@@ -181,6 +186,10 @@ if you want to create your own server subclass of Dezi::Server.
 
 Use I<class_name> as a Plack app mounted under C</ui>.
 Try L<Dezi::UI> as an example.
+
+=head2 ui
+
+Use Dezi::UI. Shortcut for --ui-class=Dezi::UI
 
 =head2 admin-class I<class_name>
 
