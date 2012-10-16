@@ -47,5 +47,6 @@ Revision history for Dezi
       Dezi::Config now has a search_server instance and an index_server instance
       instead of a single server instance. Requires Search::OpenSearch::Server 0.19.
 
-0.002003   xxx
+0.002003   15 Oct 2012
     * add Tiny response format support per SOS 0.21.
+    * add --ui shortcut to dezi cli.
