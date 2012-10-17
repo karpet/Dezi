@@ -230,7 +230,7 @@ Dezi::Config - Dezi server configuration
         cache_ttl => 3600,
 
         # explicitly turn off highlighting for some fields
-        do_not_hilite => [qw( color )],
+        do_not_hilite => { color => 1 },
 
         # see Search::Tools::Snipper
         snipper_config => { as_sentences => 1 },
