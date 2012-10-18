@@ -17,7 +17,7 @@ sub app {
 
     return builder {
 
-        enable "SimpleLogger", level => $config->{'debug'} ? "debug" : "warn";
+        enable "SimpleLogger", level => $dezi_config->debug ? "debug" : "warn";
 
         enable_if { $_[0]->{REMOTE_ADDR} eq '127.0.0.1' }
         "Plack::Middleware::ReverseProxy";
