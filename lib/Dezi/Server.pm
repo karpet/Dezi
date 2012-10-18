@@ -7,7 +7,7 @@ use base 'Search::OpenSearch::Server::Plack';
 use Dezi::Server::About;
 use Dezi::Config;
 
-our $VERSION = '0.002003';
+our $VERSION = '0.002004';
 
 sub app {
     my ( $class, $config ) = @_;
