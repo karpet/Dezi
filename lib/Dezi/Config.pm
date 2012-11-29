@@ -12,13 +12,14 @@ use Plack::Util::Accessor qw(
     admin_path
     ui
     admin
+    debug
     base_uri
     search_server
     index_server
     authenticator
 );
 
-our $VERSION = '0.002003';
+our $VERSION = '0.002004';
 
 sub new {
     my $class         = shift;
@@ -82,6 +83,7 @@ sub new {
         base_uri      => $base_uri,
         search_server => $search_server,
         index_server  => $index_server,
+        debug         => ( $config->{debug} || $ENV{DEZI_DEBUG} ),
         authenticator => (
             ( defined $username and defined $password )
             ? sub {
@@ -101,7 +103,7 @@ sub apply_default_engine_config {
     my $search_path = delete $args->{search_path};
     $engine_config->{link} ||= $search_path;
     $engine_config->{default_response_format} ||= 'JSON';
-    $engine_config->{debug} = $args->{debug};
+    $engine_config->{debug} = $args->{debug} || $ENV{DEZI_DEBUG};
     return $engine_config;
 }
 
@@ -216,6 +218,18 @@ Dezi::Config - Dezi server configuration
             find_relevant_fields => 1,
         },
 
+        # see LucyX::Suggester
+        suggester_config => {
+            limit  => 10,
+            fields => [qw( color size )],
+
+            # passed to Search::Tools::Spellcheck->new
+            # along with parser_config
+            spellcheck_config => {
+                lang => 'en_US',
+            },
+        },
+
         # cache facets for speed-up.
         # this is the Search::OpenSearch default setting
         cache => CHI->new(
@@ -280,10 +294,10 @@ methods on the object returned from new():
     admin_path
     ui
     admin
+    debug
     base_uri
     search_server
     index_server
-
 
 =head2 apply_default_engine_config( I<hashref> )
 

@@ -7,7 +7,7 @@ use base 'Search::OpenSearch::Server::Plack';
 use Dezi::Server::About;
 use Dezi::Config;
 
-our $VERSION = '0.002003';
+our $VERSION = '0.002004';
 
 sub app {
     my ( $class, $config ) = @_;
@@ -17,7 +17,7 @@ sub app {
 
     return builder {
 
-        enable "SimpleLogger", level => $config->{'debug'} ? "debug" : "warn";
+        enable "SimpleLogger", level => $dezi_config->debug ? "debug" : "warn";
 
         enable_if { $_[0]->{REMOTE_ADDR} eq '127.0.0.1' }
         "Plack::Middleware::ReverseProxy";

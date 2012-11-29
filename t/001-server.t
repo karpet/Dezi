@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use Test::More tests => 19;
+use Test::More tests => 20;
 use Plack::Test;
 use HTTP::Request;
 use JSON;
@@ -10,8 +10,12 @@ use Data::Dump qw( dump );
 use_ok('Dezi::Server');
 
 ok( my $app = Dezi::Server->app(
-        {   search_path => 's',
-            index_path  => 'i',
+        {   search_path   => 's',
+            index_path    => 'i',
+            engine_config => {
+                indexer_config =>
+                    { config => { 'FuzzyIndexingMode' => 'Stemming_en1', }, },
+            }
         }
     ),
     "new Plack app"
@@ -55,7 +59,8 @@ test_psgi(
         my $cb = shift;
         my $req = HTTP::Request->new( PUT => 'http://localhost/i/foo/bar' );
         $req->content_type('application/xml');
-        $req->content('<doc><title>i am a test</title></doc>');
+        $req->content(
+            '<doc><title>i am a test</title>tester testing test123</doc>');
         $req->content_length( length( $req->content ) );
         my $res = $cb->($req);
 
@@ -78,10 +83,22 @@ test_psgi(
         my $res = $cb->($req);
         ok( my $results = decode_json( $res->content ),
             "decode_json response" );
+
+        #dump $results;
         is( $results->{query}, "test", "query param returned" );
         cmp_ok( $results->{total}, '==', 1, "more than one hit" );
         ok( exists $results->{search_time}, "search_time key exists" );
         is( $results->{title}, qq/OpenSearch Results/, "got title" );
+        if ( defined $results->{suggestions} ) {
+            is_deeply(
+                $results->{suggestions},
+                [ 'test', 'test123', 'tester' ],
+                "got 3 suggestions, testing stemmed to test"
+            );
+        }
+        else {
+            pass("suggester not available");
+        }
     }
 );
 
