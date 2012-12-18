@@ -17,7 +17,8 @@ sub app {
 
     return builder {
 
-        enable "SimpleLogger", level => $dezi_config->debug ? "debug" : "warn";
+        enable "SimpleLogger",
+            level => $dezi_config->debug ? "debug" : "warn";
 
         enable_if { $_[0]->{REMOTE_ADDR} eq '127.0.0.1' }
         "Plack::Middleware::ReverseProxy";
@@ -72,6 +73,7 @@ sub app {
         mount '/' => sub {
             my $req = Plack::Request->new(shift);
             return Dezi::Server::About->new(
+                require_root  => 1,
                 server        => $dezi_config->index_server,
                 request       => $req,
                 search_path   => $dezi_config->search_path,

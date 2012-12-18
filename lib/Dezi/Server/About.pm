@@ -24,7 +24,7 @@ sub new {
     my $admin_path = delete $args{admin_path};
     my $ui_path    = delete $args{ui_path};
 
-    if ( $req->path ne '/' ) {
+    if ( $args{require_root} and $req->path ne '/' ) {
         my $resp = 'Resource not found';
         return [
             404,
@@ -189,13 +189,16 @@ Dezi::Server::About - Dezi server introspection metadata
 =head1 SYNOPSIS
 
  my $resp = Dezi::Server::About->new(
-                server      => $server,
-                request     => $plack_request,
-                search_path => $search_path,
-                index_path  => $index_path,
-                config      => $config,
-                version     => $VERSION,
-            );
+    require_root    => 1,   # request must be for /
+    server          => $server,
+    request         => $plack_request,
+    search_path     => $search_path,
+    index_path      => $index_path,
+    commit_path     => $commit_path,
+    rollback_path   => $rollback_path,
+    config          => $config,
+    version         => $VERSION,
+ );
 
 =head1 DESCRIPTION
 
