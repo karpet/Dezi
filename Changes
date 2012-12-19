@@ -54,6 +54,7 @@ Revision history for Dezi
 0.002004   17 Oct 2012
     * add LucyX::Suggester support for SOS 0.23 and SOS::Engine::Lucy 0.13
 
-0.002005   xxx
+0.002005   18 Dec 2012
     * fix pod SYNOPSIS for About
     * add require_root param to About->new
+
