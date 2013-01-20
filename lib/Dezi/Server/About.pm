@@ -23,7 +23,7 @@ sub new {
     my $version    = delete $args{version} || $VERSION;
     my $admin_path = delete $args{admin_path};
     my $ui_path    = delete $args{ui_path};
-
+    
     if ( $args{require_root} and $req->path ne '/' ) {
         my $resp = 'Resource not found';
         return [

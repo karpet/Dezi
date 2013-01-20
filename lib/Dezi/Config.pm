@@ -54,7 +54,7 @@ sub new {
     my $admin;
     if ( $config->{admin_class} ) {
         load $config->{admin_class};
-        $admin = $config->{admin_class}->new($config);
+        $admin = $config->{admin_class}->app( $config->{admin} );
     }
 
     load $server_class;
