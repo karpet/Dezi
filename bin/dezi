@@ -4,6 +4,7 @@ use warnings;
 use strict;
 use Plack::Runner;
 use Module::Load;
+use Data::Dump qw( dump );
 
 our $VERSION = '0.002001';
 
@@ -60,6 +61,15 @@ if ($use_ui) {
 $config->{ui_class}    ||= $ui_class;
 $config->{admin_class} ||= $admin_class;
 
+my @argv = @ARGV;
+
+#dump \@argv;
+
+my $runner = Plack::Runner->new(@args);
+$runner->parse_options(@argv);
+$runner->set_options( argv => \@argv );
+$runner->setup();    # pull in -I includes, etc for load() below
+
 if ( $config->{ui_class} ) {
     eval { load $config->{ui_class} };
     die $@ if $@;
@@ -71,11 +81,7 @@ if ( $config->{admin_class} ) {
 
 my $app = $server_class->app($config);
 
-my @argv = @ARGV;
-
-my $runner = Plack::Runner->new(@args);
-$runner->parse_options(@argv);
-$runner->set_options( argv => \@argv );
+# final step
 $runner->run($app);
 
 __END__
