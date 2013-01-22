@@ -51,11 +51,6 @@ sub new {
         $ui = $config->{ui_class}
             ->new( search_path => $search_path, base_uri => $base_uri );
     }
-    my $admin;
-    if ( $config->{admin_class} ) {
-        load $config->{admin_class};
-        $admin = $config->{admin_class}->app( $config->{admin} );
-    }
 
     load $server_class;
     my $search_server = $server_class->new(
@@ -71,6 +66,18 @@ sub new {
             { %$config, search_path => $search_path }
         ),
     );
+
+    my $admin;
+    if ( $config->{admin_class} ) {
+        load $config->{admin_class};
+        $admin = $config->{admin_class}->app(
+            config         => $config,
+            search_config  => $search_server->engine_config,
+            indexer_config => $index_server->engine_config,
+            base_uri       => $base_uri,
+        );
+    }
+
     return bless {
         search_path   => $search_path,
         index_path    => $index_path,
