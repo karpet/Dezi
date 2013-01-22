@@ -58,3 +58,5 @@ Revision history for Dezi
     * fix pod SYNOPSIS for About
     * add require_root param to About->new
 
+0.002006   xxx
+    * changes to support Dezi::Admin
