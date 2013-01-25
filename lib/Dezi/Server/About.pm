@@ -19,11 +19,12 @@ sub new {
         or croak "commit_path required";
     my $rollback_path = delete $args{rollback_path}
         or croak "rollback_path required";
-    my $config = delete $args{config} or croak "config required";
+    my $dezi_config = ( delete $args{config} || delete $args{dezi_config} )
+        or croak "config required";
     my $version    = delete $args{version} || $VERSION;
     my $admin_path = delete $args{admin_path};
     my $ui_path    = delete $args{ui_path};
-    
+
     if ( $args{require_root} and $req->path ne '/' ) {
         my $resp = 'Resource not found';
         return [
@@ -157,12 +158,12 @@ sub new {
             : undef
         ),
     };
-    if ( $config->{ui_class} ) {
-        $about->{ui_class} = $config->{ui_class};
+    if ( $dezi_config->ui ) {
+        $about->{ui_class} = ref( $dezi_config->ui );
         $about->{ui}       = $uri . $ui_path;
     }
-    if ( $config->{admin_class} ) {
-        $about->{admin_class} = $config->{admin_class};
+    if ( $dezi_config->admin ) {
+        $about->{admin_class} = ref( $dezi_config->admin );
         $about->{admin}       = $uri . $admin_path;
     }
     my $resp
@@ -196,7 +197,7 @@ Dezi::Server::About - Dezi server introspection metadata
     index_path      => $index_path,
     commit_path     => $commit_path,
     rollback_path   => $rollback_path,
-    config          => $config,
+    config          => $dezi_config,
     version         => $VERSION,
  );
 

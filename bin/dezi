@@ -41,9 +41,6 @@ if ( !$preload_app ) {
     push @args, 'loader' => 'Delayed';
 }
 
-eval { load $server_class };
-die $@ if $@;
-
 my $config = {};
 if ($dezi_config_file) {
     require Config::Any;
@@ -69,6 +66,9 @@ my $runner = Plack::Runner->new(@args);
 $runner->parse_options(@argv);
 $runner->set_options( argv => \@argv );
 $runner->setup();    # pull in -I includes, etc for load() below
+
+eval { load $server_class };
+die $@ if $@; 
 
 if ( $config->{ui_class} ) {
     eval { load $config->{ui_class} };
