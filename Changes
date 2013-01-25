@@ -59,4 +59,5 @@ Revision history for Dezi
     * add require_root param to About->new
 
 0.002006   xxx
-    * changes to support Dezi::Admin
+    * internal changes to support Dezi::Admin
+    * internal changes to support Dezi::MultiTenant
