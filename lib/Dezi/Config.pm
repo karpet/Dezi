@@ -71,10 +71,9 @@ sub new {
     if ( $config->{admin_class} ) {
         load $config->{admin_class};
         $admin = $config->{admin_class}->app(
-            config         => $config,
-            search_config  => $search_server->engine_config,
-            indexer_config => $index_server->engine_config,
-            base_uri       => $base_uri,
+            user_config => $config,
+            searcher    => $search_server,
+            base_uri    => $base_uri,
         );
     }
 
