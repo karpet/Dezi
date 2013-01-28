@@ -23,13 +23,13 @@ my $admin_class;
 require Getopt::Long;
 Getopt::Long::Configure( "no_ignore_case", "no_auto_abbrev", "pass_through" );
 Getopt::Long::GetOptions(
-    "preload-app"    => \$preload_app,
-    "dezi-config=s"  => \$dezi_config_file,
-    "ui"             => \$use_ui,
-    "ui-class=s"     => \$ui_class,
-    "admin-class=s"  => \$admin_class,
-    "server-class=s" => \$server_class,
-    "debug"          => \$debug,
+    "preload-app"      => \$preload_app,
+    "dezi-config|dc=s" => \$dezi_config_file,
+    "ui"               => \$use_ui,
+    "ui-class=s"       => \$ui_class,
+    "admin-class=s"    => \$admin_class,
+    "server-class=s"   => \$server_class,
+    "debug"            => \$debug,
 );
 
 my @args = (
@@ -68,7 +68,7 @@ $runner->set_options( argv => \@argv );
 $runner->setup();    # pull in -I includes, etc for load() below
 
 eval { load $server_class };
-die $@ if $@; 
+die $@ if $@;
 
 if ( $config->{ui_class} ) {
     eval { load $config->{ui_class} };
