@@ -8,7 +8,7 @@ use Dezi::Server::About;
 use Dezi::Config;
 use Scalar::Util qw( blessed );
 
-our $VERSION = '0.002006';
+our $VERSION = '0.002007';
 
 sub app {
     my ( $class, $config ) = @_;
@@ -89,7 +89,7 @@ sub app {
                 rollback_path => $dezi_config->rollback_path,
                 admin_path    => $dezi_config->admin_path,
                 ui_path       => $dezi_config->ui_path,
-                config        => $config,
+                config        => $dezi_config,
                 version       => $VERSION,
                 base_uri      => $dezi_config->base_uri,
             );
