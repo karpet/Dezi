@@ -6,7 +6,7 @@ use JSON;
 use Search::Tools::XML;
 use Scalar::Util qw( blessed );
 
-our $VERSION = '0.002007';
+our $VERSION = '0.002008';
 
 sub new {
     my $class       = shift;
@@ -169,7 +169,7 @@ sub new {
         $about->{ui}       = $uri . $ui_path;
     }
     if ( $dezi_config->admin ) {
-        $about->{admin_class} = ref( $dezi_config->admin );
+        $about->{admin_class} = $args{admin_class};
         $about->{admin}       = $uri . $admin_path;
     }
     my $resp
