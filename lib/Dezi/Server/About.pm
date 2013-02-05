@@ -4,6 +4,7 @@ use warnings;
 use Carp;
 use JSON;
 use Search::Tools::XML;
+use Scalar::Util qw( blessed );
 
 our $VERSION = '0.002007';
 
@@ -21,6 +22,11 @@ sub new {
         or croak "rollback_path required";
     my $dezi_config = ( delete $args{config} || delete $args{dezi_config} )
         or croak "config required";
+
+    if ( !blessed $dezi_config or !$dezi_config->isa('Dezi::Config') ) {
+        croak "config|dezi_config must be a Dezi::Config object";
+    }
+
     my $version    = delete $args{version} || $VERSION;
     my $admin_path = delete $args{admin_path};
     my $ui_path    = delete $args{ui_path};
