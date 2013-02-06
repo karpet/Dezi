@@ -12,6 +12,7 @@ use Plack::Util::Accessor qw(
     admin_path
     ui
     admin
+    admin_class
     debug
     base_uri
     search_server

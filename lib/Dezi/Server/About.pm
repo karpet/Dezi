@@ -169,7 +169,7 @@ sub new {
         $about->{ui}       = $uri . $ui_path;
     }
     if ( $dezi_config->admin ) {
-        $about->{admin_class} = $args{admin_class};
+        $about->{admin_class} = $dezi_config->admin_class;
         $about->{admin}       = $uri . $admin_path;
     }
     my $resp
