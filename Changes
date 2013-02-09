@@ -65,6 +65,6 @@ Revision history for Dezi
 0.002007   5 Feb 2013
     * fix internal config passing
 
-0.002008   xxx
+0.002008   8 Feb 2013
     * fix about->admin_class reporting
-
+    * add --admin option to dezi cli, document --admin-class
