@@ -17,6 +17,7 @@ my $dezi_config_file;
 my $server_class = 'Dezi::Server';
 my $debug;
 my $use_ui;
+my $use_admin;
 my $ui_class;
 my $admin_class;
 
@@ -28,6 +29,7 @@ Getopt::Long::GetOptions(
     "ui"               => \$use_ui,
     "ui-class=s"       => \$ui_class,
     "admin-class=s"    => \$admin_class,
+    "admin"            => \$use_admin,
     "server-class=s"   => \$server_class,
     "debug"            => \$debug,
 );
@@ -54,6 +56,9 @@ if ($dezi_config_file) {
 $config->{debug} = $debug;
 if ($use_ui) {
     $ui_class ||= 'Dezi::UI';
+}
+if ($use_admin) {
+    $admin_class ||= 'Dezi::Admin';
 }
 $config->{ui_class}    ||= $ui_class;
 $config->{admin_class} ||= $admin_class;
@@ -199,7 +204,13 @@ Use Dezi::UI. Shortcut for --ui-class=Dezi::UI
 
 =head2 admin-class I<class_name>
 
-B<not yet implemented>
+The I<class_name> as a Plack app mounted under C</admin>.
+Try L<Dezi::Admin> as an example.
+
+=head2 admin
+
+Use Dezi::Admin. Shortcut for --admin-class=Dezi::Admin
+
 
 =head1 AUTHOR
 
