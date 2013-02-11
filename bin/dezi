@@ -20,6 +20,7 @@ my $use_ui;
 my $use_admin;
 my $ui_class;
 my $admin_class;
+my $elastic_mode;
 
 require Getopt::Long;
 Getopt::Long::Configure( "no_ignore_case", "no_auto_abbrev", "pass_through" );
@@ -32,6 +33,7 @@ Getopt::Long::GetOptions(
     "admin"            => \$use_admin,
     "server-class=s"   => \$server_class,
     "debug"            => \$debug,
+    "elastic"          => \$elastic_mode,
 );
 
 my @args = (
@@ -62,6 +64,13 @@ if ($use_admin) {
 }
 $config->{ui_class}    ||= $ui_class;
 $config->{admin_class} ||= $admin_class;
+
+if ($elastic_mode) {
+
+    $config->{engine_config}->{indexer_config}->{config}->{UndefinedMetaTags}
+        = 'auto',
+
+}
 
 my @argv = @ARGV;
 
@@ -211,6 +220,9 @@ Try L<Dezi::Admin> as an example.
 
 Use Dezi::Admin. Shortcut for --admin-class=Dezi::Admin
 
+=head2 elastic
+
+If set, UndefinedMetaTags is set to 'auto' in the indexer_config.
 
 =head1 AUTHOR
 
