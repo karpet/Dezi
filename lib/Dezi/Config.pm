@@ -255,7 +255,7 @@ Dezi::Config - Dezi server configuration
         do_not_hilite => { color => 1 },
 
         # see Search::Tools::Snipper
-        snipper_config => { as_sentences => 1 },
+        snipper_config => { as_sentences => 1, strip_markup => 1, },
 
         # see Search::Tools::HiLiter
         hiliter_config => { class => 'h', tag => 'b' },
