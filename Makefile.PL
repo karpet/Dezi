@@ -6,6 +6,7 @@ use 5.008003;
 name 'Dezi';
 all_from 'lib/Dezi.pm';
 requires 'Test::More'                       => 0;
+requires 'Search::Tools'                    => 0.87;
 requires 'Search::Query'                    => 0.21;
 requires 'Search::Query::Dialect::Lucy'     => 0.05;
 requires 'Lucy'                             => 0.003002;
