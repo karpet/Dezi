@@ -5,8 +5,9 @@ use strict;
 use Plack::Runner;
 use Module::Load;
 use Data::Dump qw( dump );
+use Dezi;
 
-our $VERSION = '0.002001';
+our $VERSION = $Dezi::VERSION;
 
 sub version {
     print "$VERSION\n";
@@ -68,7 +69,7 @@ $config->{admin_class} ||= $admin_class;
 if ($elastic_mode) {
 
     $config->{engine_config}->{indexer_config}->{config}->{UndefinedMetaTags}
-        = 'auto',
+        = 'autoall',
 
 }
 

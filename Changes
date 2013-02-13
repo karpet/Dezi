@@ -73,3 +73,6 @@ Revision history for Dezi
     * add --elastic feature to dezi cli
     * document strip_markup => 1 in snipper_config
 
+0.002010   12 Feb 2013
+    * change --elastic to use 'autoall' with SWISH::3 1.000006
+
