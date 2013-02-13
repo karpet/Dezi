@@ -68,3 +68,8 @@ Revision history for Dezi
 0.002008   8 Feb 2013
     * fix about->admin_class reporting
     * add --admin option to dezi cli, document --admin-class
+
+0.002009   12 Feb 2013
+    * add --elastic feature to dezi cli
+    * document strip_markup => 1 in snipper_config
+
