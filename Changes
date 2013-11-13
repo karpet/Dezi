@@ -1,78 +1,83 @@
 Revision history for Dezi
 
-0.001000    21 June 2011
-    * Initial release.
+0.002010 12 Feb 2013
+ - change --elastic to use 'autoall' with SWISH::3 1.000006
 
-0.001001    02 Aug  2011
-    * change url root to /search, reserving namespaces /index and /admin as well
+0.002009 12 Feb 2013
+ - add --elastic feature to dezi cli
+ - document strip_markup => 1 in snipper_config
 
-0.001002    29 Sept 2011
-    * fix docs, default engine config
-    * add / about() feature in support of Dezi::Client
+0.002008 8 Feb 2013
+ - fix about->admin_class reporting
+ - add --admin option to dezi cli, document --admin-class
 
-0.001003    22 Oct 2011
-    * fix dependencies in Makefile.PL
-    * add Dezi::Tutorial
+0.002007 5 Feb 2013
+ - fix internal config passing
 
-0.001004    16 March 2012
-    * added ui-class and admin-class options
+0.002006 3 Feb 2013
+ - internal changes to support Dezi::Admin
+ - internal changes to support Dezi::MultiTenant
 
-0.001005    10 July 2012
-    * add config documentation
-    * refactor Dezi::Server to create Dezi::Server::About class
+0.002005 18 Dec 2012
+ - fix pod SYNOPSIS for About
+ - add require_root param to About->new
 
-0.001006    17 Aug 2012
-    * support SPORE specification in About (https://github.com/SPORE/specifications/blob/master/spore_description.pod)
-    * fixes to URI generation in About
-    * now requires Plack::Middleware::ReverseProxy for automatic detection when running behind a reverse proxy.
+0.002004 17 Oct 2012
+ - add LucyX::Suggester support for SOS 0.23 and SOS::Engine::Lucy 0.13
 
-0.001007    21 Aug 2012
-    * pod additions and fixes.
-    * quote some objects in About to force stringify.
+0.002003 15 Oct 2012
+ - add Tiny response format support per SOS 0.21.
+ - add --ui shortcut to dezi cli.
 
-0.001008    3 Sept 2012
-    * add /commit and /rollback features per Search::OpenSearch::Server 0.17
+0.002002 13 Sept 2012
+ - fix security issue with non-idempotent requests to /search URL app,
+   bypassing authentication on the /index URL app. Dezi::Config now has a
+   search_server instance and an index_server instance instead of a single
+   server instance. Requires Search::OpenSearch::Server 0.19.
 
-0.002000   11 Sept 2012 
-    * refactor all config into Dezi::Config
-    * add optional basic authentication for /index, /commit and /rollback actions
-    * add Architecture doc, flesh out Tutorial doc.
+0.002001 12 Sept 2012
+ - documentation fixes
 
-0.002001   12 Sept 2012
-    * documentation fixes
+0.002000 11 Sept 2012 
+ - refactor all config into Dezi::Config
+ - add optional basic authentication for /index, /commit and /rollback
+   actions
+ - add Architecture doc, flesh out Tutorial doc.
 
-0.002002   13 Sept 2012
-    * fix security issue with non-idempotent requests to /search URL app,
-      bypassing authentication on the /index URL app.
-      Dezi::Config now has a search_server instance and an index_server instance
-      instead of a single server instance. Requires Search::OpenSearch::Server 0.19.
+0.001008 3 Sept 2012
+ - add /commit and /rollback features per Search::OpenSearch::Server 0.17
 
-0.002003   15 Oct 2012
-    * add Tiny response format support per SOS 0.21.
-    * add --ui shortcut to dezi cli.
+0.001007 21 Aug 2012
+ - pod additions and fixes.
+ - quote some objects in About to force stringify.
 
-0.002004   17 Oct 2012
-    * add LucyX::Suggester support for SOS 0.23 and SOS::Engine::Lucy 0.13
+0.001006 17 Aug 2012
+ - support SPORE specification in About
+   (https://github.com/SPORE/specifications/blob/master/spore_description.p
+   od)
+ - fixes to URI generation in About
+ - now requires Plack::Middleware::ReverseProxy for automatic detection
+   when running behind a reverse proxy.
 
-0.002005   18 Dec 2012
-    * fix pod SYNOPSIS for About
-    * add require_root param to About->new
+0.001005 10 July 2012
+ - add config documentation
+ - refactor Dezi::Server to create Dezi::Server::About class
 
-0.002006   3 Feb 2013
-    * internal changes to support Dezi::Admin
-    * internal changes to support Dezi::MultiTenant
+0.001004 16 March 2012
+ - added ui-class and admin-class options
 
-0.002007   5 Feb 2013
-    * fix internal config passing
+0.001003 22 Oct 2011
+ - fix dependencies in Makefile.PL
+ - add Dezi::Tutorial
 
-0.002008   8 Feb 2013
-    * fix about->admin_class reporting
-    * add --admin option to dezi cli, document --admin-class
+0.001002 29 Sept 2011
+ - fix docs, default engine config
+ - add / about() feature in support of Dezi::Client
 
-0.002009   12 Feb 2013
-    * add --elastic feature to dezi cli
-    * document strip_markup => 1 in snipper_config
+0.001001 02 Aug  2011
+ - change url root to /search, reserving namespaces /index and /admin as
+   well
 
-0.002010   12 Feb 2013
-    * change --elastic to use 'autoall' with SWISH::3 1.000006
+0.001000 21 June 2011
+ - Initial release.
 
