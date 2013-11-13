@@ -20,7 +20,7 @@ use Plack::Util::Accessor qw(
     authenticator
 );
 
-our $VERSION = '0.002010';
+our $VERSION = '0.002011';
 
 sub new {
     my $class         = shift;

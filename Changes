@@ -1,5 +1,8 @@
 Revision history for Dezi
 
+0.002011 xxx
+ - fix bug in Server::About where fields is not populated
+
 0.002010 12 Feb 2013
  - change --elastic to use 'autoall' with SWISH::3 1.000006
 

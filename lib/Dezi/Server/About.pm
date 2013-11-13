@@ -6,7 +6,7 @@ use JSON;
 use Search::Tools::XML;
 use Scalar::Util qw( blessed );
 
-our $VERSION = '0.002010';
+our $VERSION = '0.002011';
 
 sub new {
     my $class       = shift;
@@ -142,6 +142,11 @@ sub new {
             base_url    => "$rollback_uri",
             };
     }
+
+    # try to init and discard a searcher
+    # to make sure fields get populated
+    # we wrap in an eval since the index may not yet exist
+    eval { $server->engine->searcher; };
 
     my $about = {
         name         => 'Dezi',
