@@ -1,6 +1,6 @@
 Revision history for Dezi
 
-0.002011 xxx
+0.002011 13 Nov 2013
  - fix bug in Server::About where fields is not populated
 
 0.002010 12 Feb 2013
