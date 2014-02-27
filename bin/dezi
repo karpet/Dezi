@@ -22,6 +22,7 @@ my $use_admin;
 my $ui_class;
 my $admin_class;
 my $elastic_mode;
+my $use_auto_commit = 1;
 
 require Getopt::Long;
 Getopt::Long::Configure( "no_ignore_case", "no_auto_abbrev", "pass_through" );
@@ -35,6 +36,7 @@ Getopt::Long::GetOptions(
     "server-class=s"   => \$server_class,
     "debug"            => \$debug,
     "elastic"          => \$elastic_mode,
+    "auto_commit|ac!"  => \$use_auto_commit,
 );
 
 my @args = (
@@ -72,6 +74,8 @@ if ($elastic_mode) {
         = 'autoall',
 
 }
+
+$config->{engine_config}->{auto_commit} = $use_auto_commit;
 
 my @argv = @ARGV;
 
@@ -179,6 +183,7 @@ Example (in native Perl format):
     snipper_config  => { as_sentences => 1 },        # see Search::Tools::Snipper
     hiliter_config  => { class => 'h', tag => 'b' }, # see Search::Tools::HiLiter
     parser_config   => {},                           # see Search::Query::Parser
+    auto_commit     => 1,                            # see Search::OpenSearch::Engine::Lucy
   }
  };
  
@@ -224,6 +229,12 @@ Use Dezi::Admin. Shortcut for --admin-class=Dezi::Admin
 =head2 elastic
 
 If set, UndefinedMetaTags is set to 'auto' in the indexer_config.
+
+=head2 auto_commit
+
+C<engine_config> I<auto_commit> flag is explicitly set. Use --no-auto_commit to disable.
+
+Alias is C<--ac> (C<--no-ac>).
 
 =head1 AUTHOR
 

@@ -2,7 +2,7 @@ package Dezi;
 use warnings;
 use strict;
 
-our $VERSION = '0.002011';
+our $VERSION = '0.002012';
 
 1;
 
