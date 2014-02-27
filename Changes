@@ -1,6 +1,6 @@
 Revision history for Dezi
 
-0.002012 xxx
+0.002012 27 Feb 2014
  - fix Config docs re: Dezi::Admin, add auto_commit note
  - add --auto_commit (--ac) option to toggle auto_commit via cli
 
