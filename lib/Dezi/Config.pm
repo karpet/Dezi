@@ -141,14 +141,14 @@ Dezi::Config - Dezi server configuration
     commit_path     => '/commit',
     rollback_path   => '/rollback',
     ui_path         => '/ui',
-    admin_path      => '/admin',
     ui_class        => 'Dezi::UI',
     # or
     # ui              => Dezi::UI->new()
-    
-    # NOT YET SUPPORTED
-    #admin_class     => 'Dezi::Admin',
-    #admin           => Dezi::Admin->new(),
+   
+    admin_path      => '/admin', 
+    admin_class     => 'Dezi::Admin',
+    # or
+    # admin           => Dezi::Admin->new(),
     
     base_uri        => '',
     server_class    => 'Dezi::Server',
@@ -268,6 +268,9 @@ Dezi::Config - Dezi server configuration
 
         # see Search::Tools::QueryParser
         parser_config => {},
+
+        # see Search::OpenSearch::Engine::Lucy
+        auto_commit => 1, # set to 0 to enable transactions with /commit and /rollback
 
     }
  
