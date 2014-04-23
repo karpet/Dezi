@@ -101,6 +101,11 @@ sub BUILDARGS {
         if ( !$class->can($arg) ) {
             $args{server_config}->{$arg} = delete $args{$arg};
         }
+        elsif ( $arg eq 'admin' and ref( $args{$arg} ) eq 'HASH' ) {
+
+            # special case. compatability with Dezi::Admin::Config. 
+            $args{server_config}->{$arg} = delete $args{$arg};
+        }
     }
 
     # make sure all paths are /-prefixed
