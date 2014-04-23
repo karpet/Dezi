@@ -1,9 +1,8 @@
 package Dezi::Server;
-use warnings;
-use strict;
+use Moose;
+extends 'Search::OpenSearch::Server::Plack';
 use Carp;
 use Plack::Builder;
-use base 'Search::OpenSearch::Server::Plack';
 use Dezi::Server::About;
 use Dezi::Config;
 use Scalar::Util qw( blessed );

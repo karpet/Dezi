@@ -1,107 +1,148 @@
 package Dezi::Config;
-use strict;
-use warnings;
+use Moose;
+use Types::Standard qw( InstanceOf Str Bool CodeRef Maybe HashRef );
 use Carp;
 use Data::Dump qw( dump );
-use Module::Load;
-use Plack::Util::Accessor qw(
-    search_path
-    index_path
-    commit_path
-    rollback_path
-    ui_path
-    admin_path
-    ui
-    admin
-    admin_class
-    debug
-    base_uri
-    search_server
-    index_server
-    authenticator
+use Class::Load;
+
+has 'search_path' => ( is => 'rw', isa => Str, default => sub {'/search'} );
+has 'index_path'  => ( is => 'rw', isa => Str, default => sub {'/index'} );
+has 'commit_path' => ( is => 'rw', isa => Str, default => sub {'/commit'} );
+has 'rollback_path' =>
+    ( is => 'rw', isa => Str, default => sub {'/rollback'} );
+has 'ui_path'    => ( is => 'rw', isa => Str, default => sub {'/ui'} );
+has 'admin_path' => ( is => 'rw', isa => Str, default => sub {'/admin'} );
+has 'ui'         => (
+    is      => 'rw',
+    isa     => Maybe [ InstanceOf ['Dezi::UI'] ],
+    lazy    => 1,
+    builder => 'init_ui',
 );
+has 'admin' => (
+    is      => 'rw',
+    isa     => Maybe [ InstanceOf ['Dezi::Admin'] ],
+    lazy    => 1,
+    builder => 'init_admin',
+);
+has 'server_class' =>
+    ( is => 'rw', isa => Str, default => sub {'Dezi::Server'} );
+has 'ui_class'    => ( is => 'rw', isa => Maybe [Str] );
+has 'admin_class' => ( is => 'rw', isa => Maybe [Str] );
+has 'debug' =>
+    ( is => 'rw', isa => Bool, default => sub { $ENV{DEZI_DEBUG} || 0 } );
+has 'base_uri' => ( is => 'rw', isa => Str, default => sub {''} );
+has 'search_server' => (
+    is      => 'rw',
+    isa     => InstanceOf ['Search::OpenSearch::Server::Plack'],
+    lazy    => 1,
+    builder => 'init_search_server',
+);
+has 'index_server' => (
+    is      => 'rw',
+    isa     => InstanceOf ['Search::OpenSearch::Server::Plack'],
+    lazy    => 1,
+    builder => 'init_index_server',
+);
+has 'authenticator' => ( is => 'rw', isa => Maybe [CodeRef] );
+has 'server_config' => ( is => 'rw', isa => HashRef );
 
 our $VERSION = '0.002999_01';
 
-sub new {
-    my $class         = shift;
-    my $config        = shift or croak "config hashref required";
-    my $server_class  = delete $config->{server_class} || 'Dezi::Server';
-    my $search_path   = delete $config->{search_path} || '/search';
-    my $index_path    = delete $config->{index_path} || '/index';
-    my $commit_path   = delete $config->{commit_path} || '/commit';
-    my $rollback_path = delete $config->{rollback_path} || '/rollback';
-    my $ui_path       = delete $config->{ui_path} || '/ui';
-    my $admin_path    = delete $config->{admin_path} || '/admin';
-    my $username      = delete $config->{username};
-    my $password      = delete $config->{password};
+sub init_ui {
+    my $self = shift;
+    if ( $self->ui_class ) {
+        Class::Load::load_class $self->ui_class;
+        return $self->ui_class->new(
+            search_path => $self->search_path,
+            base_uri    => $self->base_uri
+        );
+    }
+    return undef;
+}
 
-    for (
-        (   $search_path,   $index_path, $commit_path,
-            $rollback_path, $ui_path,    $admin_path,
-        )
+sub init_admin {
+    my $self = shift;
+    if ( $self->admin_class ) {
+        Class::Load::load_class $self->admin_class;
+        return $self->admin_class->app(
+            user_config => $self,
+            searcher    => $self->search_server,
+            base_uri    => $self->base_uri,
+        );
+    }
+    return undef;
+}
+
+sub BUILDARGS {
+    my $class = shift;
+    my %args;
+    if ( @_ == 1 and ref( $_[0] ) eq 'HASH' ) {
+        %args = %{ $_[0] };
+    }
+    else {
+        %args = @_;
+    }
+
+    # save credentials in a closure but not plain in args
+    my $username      = delete $args{username};
+    my $password      = delete $args{password};
+    my $authenticator = ( defined $username and defined $password )
+        ? sub {
+        my ( $u, $p ) = @_;
+        return $u eq $username && $p eq $password;
+        }
+        : undef;
+    $args{authenticator} ||= $authenticator;
+
+    # save anything we do not have an explicit method for
+    # in the server_config stash
+    $args{server_config} ||= {};
+    for my $arg ( keys %args ) {
+        if ( !$class->can($arg) ) {
+            $args{server_config}->{$arg} = delete $args{$arg};
+        }
+    }
+
+    # make sure all paths are /-prefixed
+    for my $p (
+        qw( search_path index_path commit_path rollback_path ui_path admin_path )
         )
     {
-        $_ = "/$_" unless m!^/!;
+        if ( exists $args{$p} ) {
+            $args{$p} = "/$args{$p}" unless $args{$p} =~ m!^/!;
+        }
     }
+    return \%args;
+}
 
-    my $base_uri = delete $config->{base_uri} || '';
+sub BUILD {
+    my $self          = shift;
+    my $server_class  = $self->server_class;
+    my $search_path   = $self->search_path;
+    my $index_path    = $self->index_path;
+    my $commit_path   = $self->commit_path;
+    my $rollback_path = $self->rollback_path;
+    my $ui_path       = $self->ui_path;
+    my $admin_path    = $self->admin_path;
+    my $base_uri      = $self->base_uri;
 
-    my $ui;
-    if ( $config->{ui_class} ) {
-        load $config->{ui_class};
-        $ui = $config->{ui_class}
-            ->new( search_path => $search_path, base_uri => $base_uri );
-    }
-
-    load $server_class;
+    Class::Load::load_class $server_class;
     my $search_server = $server_class->new(
-        %$config,
-        engine_config => $class->apply_default_engine_config(
-            { %$config, search_path => $search_path }
+        %{ $self->server_config },
+        engine_config => $self->apply_default_engine_config(
+            { %{ $self->server_config }, search_path => $search_path }
         ),
         http_allow => [qw( GET )],
     );
     my $index_server = $server_class->new(
-        %$config,
-        engine_config => $class->apply_default_engine_config(
-            { %$config, search_path => $search_path }
+        %{ $self->server_config },
+        engine_config => $self->apply_default_engine_config(
+            { %{ $self->server_config }, search_path => $search_path }
         ),
     );
 
-    my $admin;
-    if ( $config->{admin_class} ) {
-        load $config->{admin_class};
-        $admin = $config->{admin_class}->app(
-            user_config => $config,
-            searcher    => $search_server,
-            base_uri    => $base_uri,
-        );
-    }
-
-    my $self = bless {
-        search_path   => $search_path,
-        index_path    => $index_path,
-        commit_path   => $commit_path,
-        rollback_path => $rollback_path,
-        ui_path       => $ui_path,
-        admin_path    => $admin_path,
-        ui            => $ui,
-        admin         => $admin,
-        admin_class   => $config->{admin_class},
-        base_uri      => $base_uri,
-        search_server => $search_server,
-        index_server  => $index_server,
-        debug         => ( $config->{debug} || $ENV{DEZI_DEBUG} ),
-        authenticator => (
-            ( defined $username and defined $password )
-            ? sub {
-                my ( $u, $p ) = @_;
-                return $u eq $username && $p eq $password;
-                }
-            : undef,
-        ),
-    }, $class;
+    $self->search_server($search_server);
+    $self->index_server($index_server);
 
     $self->debug and carp dump $self;
 
@@ -109,14 +150,14 @@ sub new {
 }
 
 sub apply_default_engine_config {
-    my ( $class, $args ) = @_;
+    my ( $self, $args ) = @_;
     my $engine_config = $args->{engine_config} || {};
     $engine_config->{type}  ||= 'Lucy';
     $engine_config->{index} ||= ['dezi.index'];
     my $search_path = delete $args->{search_path};
     $engine_config->{link} ||= $search_path;
     $engine_config->{default_response_format} ||= 'JSON';
-    $engine_config->{debug} = $args->{debug} || $ENV{DEZI_DEBUG};
+    $engine_config->{debug} = $args->{debug} || $self->debug;
     return $engine_config;
 }
 
@@ -320,6 +361,22 @@ methods on the object returned from new():
     base_uri
     search_server
     index_server
+
+=head2 BUILD
+
+Internal method called by new().
+
+=head2 BUILDARGS
+
+Internal method. Some convenient arg munging for new().
+
+=head2 init_ui
+
+Returns an instance of B<ui_class> if set.
+
+=head2 init_admin
+
+Returns an instance of B<admin_class> if set.
 
 =head2 apply_default_engine_config( I<hashref> )
 
