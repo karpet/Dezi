@@ -20,7 +20,7 @@ has 'ui'         => (
 );
 has 'admin' => (
     is      => 'rw',
-    isa     => Maybe [ InstanceOf ['Dezi::Admin'] ],
+    isa     => Maybe [CodeRef],
     lazy    => 1,
     builder => 'init_admin',
 );
@@ -65,7 +65,7 @@ sub init_admin {
     if ( $self->admin_class ) {
         Class::Load::load_class $self->admin_class;
         return $self->admin_class->app(
-            user_config => $self,
+            user_config => $self->server_config,
             searcher    => $self->search_server,
             base_uri    => $self->base_uri,
         );
@@ -103,7 +103,7 @@ sub BUILDARGS {
         }
         elsif ( $arg eq 'admin' and ref( $args{$arg} ) eq 'HASH' ) {
 
-            # special case. compatability with Dezi::Admin::Config. 
+            # special case. compatability with Dezi::Admin::Config.
             $args{server_config}->{$arg} = delete $args{$arg};
         }
     }
