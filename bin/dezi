@@ -107,7 +107,7 @@ __END__
 
 =head1 NAME
 
-Dezi - search platform based on Apache Lucy, Swish3 and Plack
+dezi - Dezi server app
 
 =head1 SYNOPSIS
 
@@ -251,8 +251,7 @@ automatically be notified of progress on your bug as I make changes.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc Dezi
-
+    perldoc dezi
 
 You can also look for information at:
 
