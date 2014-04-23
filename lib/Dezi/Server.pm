@@ -30,14 +30,15 @@ sub app {
         enable_if { $_[0]->{REMOTE_ADDR} eq '127.0.0.1' }
         "Plack::Middleware::ReverseProxy";
 
-        mount $dezi_config->search_path() => $dezi_config->search_server;
-        mount $dezi_config->index_path()  => builder {
+        mount $dezi_config->search_path() =>
+            $dezi_config->search_server->to_app;
+        mount $dezi_config->index_path() => builder {
             if ( defined $dezi_config->authenticator ) {
                 enable "Auth::Basic",
                     authenticator => $dezi_config->authenticator,
                     realm         => 'Dezi Indexer';
             }
-            $dezi_config->index_server;
+            $dezi_config->index_server->to_app;
         };
         mount $dezi_config->commit_path() => builder {
             if ( defined $dezi_config->authenticator ) {
