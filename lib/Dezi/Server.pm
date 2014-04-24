@@ -69,7 +69,7 @@ sub app {
         };
 
         if ( $dezi_config->ui ) {
-            mount $dezi_config->ui_path() => $dezi_config->ui;
+            mount $dezi_config->ui_path() => $dezi_config->ui->to_app;
         }
 
         if ( $dezi_config->admin ) {
