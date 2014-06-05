@@ -1,6 +1,6 @@
 Revision history for Dezi
 
-0.002999_01 xxx
+0.002998_01 05 June 2014
  - call to_app explicitly on Search::OpenSearch::Server instances
  - use Moose (as all Search:: dependencies use it now)
 
