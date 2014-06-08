@@ -153,6 +153,9 @@ Class method that uses L<Plack::Builder> to construct the server
 application. I<config> should be a hashref that is converted
 internally to a L<Dezi::Config> object.
 
+Read the L<Dezi::Config> documentation for full reference of all
+options available in I<config>.
+
 Returns the Plack $app via the L<Plack::Builder> builder() function.
 
 =head1 AUTHOR

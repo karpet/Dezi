@@ -50,6 +50,10 @@ only. You should read:
 
 the L<Dezi::Tutorial>
 
+=item 
+
+the L<Dezi::Config> documentation
+
 =item
 
 the L<Dezi::Server> class documentation
