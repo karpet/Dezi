@@ -46,7 +46,7 @@ has 'index_server' => (
 has 'authenticator' => ( is => 'rw', isa => Maybe [CodeRef] );
 has 'server_config' => ( is => 'rw', isa => HashRef );
 
-our $VERSION = '0.002998_01';
+our $VERSION = '0.003000';
 
 sub init_ui {
     my $self = shift;

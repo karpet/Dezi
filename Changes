@@ -1,5 +1,8 @@
 Revision history for Dezi
 
+0.003000 07 June 2014
+ - official Moose release in support of S::OS 0.400
+
 0.002998_01 05 June 2014
  - call to_app explicitly on Search::OpenSearch::Server instances
  - use Moose (as all Search:: dependencies use it now)
