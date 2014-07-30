@@ -1,5 +1,9 @@
 Revision history for Dezi
 
+0.004000 30 July 2014
+ - switch all references to SWISH::Prog to Dezi::App
+ - require Dezi::App 0.006 or later instead of SWISH::Prog
+
 0.003000 07 June 2014
  - official Moose release in support of S::OS 0.400
 

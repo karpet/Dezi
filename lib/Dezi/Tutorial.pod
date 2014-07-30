@@ -54,9 +54,9 @@ in the script's comments.
 =head2 Create a Swish3 configuration file
 
 As described in L<Dezi::Architecture>, Dezi is based on Swish3
-L<http://swish-e.org/swish3/>. You can index the Reuters corpus
-with the B<swish3> command that
-comes with L<SWISH::Prog> (one of the Dezi dependencies).
+L<http://swish3.dezi.org/>. You can index the Reuters corpus
+with the B<deziapp> command that
+comes with L<Dezi::App> (one of the Dezi dependencies).
 
 First, you'll need a configuration file. Here's the one used
 for the Dezi demo:
@@ -68,7 +68,7 @@ for the Dezi demo:
  PropertyNames dates topics people places orgs author dateline
  FuzzyIndexingMode Stemming_en1
 
-Save the file as C<swish.conf>.
+Save the file as C<dezi.conf>.
 
 More details on Swish3 configuration can be found
 at L<http://swish-e.org/docs/swish-config.html>.
@@ -78,7 +78,7 @@ at L<http://swish-e.org/docs/swish-config.html>.
 If your Reuters docs are in a directory called C<reuters>,
 you can create an index with a command like:
 
- % swish3 -c swish.conf -F lucy -f dezi.index -i reuters
+ % deziapp -c dezi.conf -i reuters
  
 You can index all kinds of document types, not just XML, but for
 the purposes of this tutorial, we'll keep it simple.
@@ -239,7 +239,7 @@ See http://dev.perl.org/licenses/ for more information.
 
 =head1 SEE ALSO
 
-L<Dezi::Client>, L<Search::OpenSearch>, L<SWISH::3>, L<SWISH::Prog::Lucy>,
+L<Dezi::Client>, L<Search::OpenSearch>, L<SWISH::3>, L<Dezi::App>,
 L<Plack>, L<Lucy>
 
 =cut

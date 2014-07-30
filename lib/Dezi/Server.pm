@@ -7,7 +7,7 @@ use Dezi::Server::About;
 use Dezi::Config;
 use Scalar::Util qw( blessed );
 
-our $VERSION = '0.003000';
+our $VERSION = '0.004000';
 
 sub app {
     my ( $class, $config ) = @_;
@@ -221,7 +221,7 @@ See http://dev.perl.org/licenses/ for more information.
 
 =head1 SEE ALSO
 
-L<Search::OpenSearch>, L<SWISH::3>, L<SWISH::Prog::Lucy>,
+L<Search::OpenSearch>, L<SWISH::3>, L<Dezi::App>,
 L<Plack>, L<Lucy>
 
 =cut

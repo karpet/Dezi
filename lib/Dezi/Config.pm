@@ -46,7 +46,7 @@ has 'index_server' => (
 has 'authenticator' => ( is => 'rw', isa => Maybe [CodeRef] );
 has 'server_config' => ( is => 'rw', isa => HashRef );
 
-our $VERSION = '0.003000';
+our $VERSION = '0.004000';
 
 sub init_ui {
     my $self = shift;
@@ -241,10 +241,10 @@ Dezi::Config - Dezi server configuration
         fields => [qw( color size flavor )],
 
         # options passed to indexer defined by Engine type (above)
-        # defaults to SWISH::Prog::Lucy::Indexer->new
+        # defaults to Dezi::Lucy::Indexer->new
         indexer_config => {
         
-            # see SWISH::Prog::Config
+            # see Dezi::Indexer::Config
             # and http://swish-e.org/docs/swish-config.html
             config => { 
 
@@ -271,7 +271,7 @@ Dezi::Config - Dezi server configuration
         },
 
         # options passed to searcher defined by Engine type (above)
-        # defaults to SWISH::Prog::Lucy::Searcher->new
+        # defaults to Dezi::Lucy::Searcher->new
         searcher_config => {
             max_hits             => 1000,
             find_relevant_fields => 1,
@@ -462,7 +462,7 @@ See http://dev.perl.org/licenses/ for more information.
 
 =head1 SEE ALSO
 
-L<Search::OpenSearch>, L<Search::Tools>, L<SWISH::3>, L<SWISH::Prog::Lucy>,
+L<Search::OpenSearch>, L<Search::Tools>, L<SWISH::3>, L<Dezi::App>,
 L<Plack>, L<Lucy>
 
 =cut
