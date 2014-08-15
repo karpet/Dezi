@@ -114,7 +114,7 @@ sub BUILDARGS {
         )
     {
         if ( exists $args{$p} ) {
-            $args{$p} = "/$args{$p}" unless $args{$p} =~ m!^/!;
+            $args{$p} = "/$args{$p}" unless $args{$p} =~ m!^(/|https?:)!;
         }
     }
     return \%args;

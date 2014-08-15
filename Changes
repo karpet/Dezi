@@ -1,5 +1,8 @@
 Revision history for Dezi
 
+0.004001 xxx
+ - allow for fully-qualified URLs in search_path, index_path, etc.
+
 0.004000 30 July 2014
  - switch all references to SWISH::Prog to Dezi::App
  - require Dezi::App 0.006 or later instead of SWISH::Prog
