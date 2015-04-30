@@ -22,7 +22,7 @@ my $use_admin;
 my $ui_class;
 my $admin_class;
 my $elastic_mode;
-my $use_auto_commit = 1;
+my $use_auto_commit = undef;
 
 require Getopt::Long;
 Getopt::Long::Configure( "no_ignore_case", "no_auto_abbrev", "pass_through" );
@@ -75,7 +75,8 @@ if ($elastic_mode) {
 
 }
 
-$config->{engine_config}->{auto_commit} = $use_auto_commit;
+$config->{engine_config}->{auto_commit} = $use_auto_commit
+    if defined $use_auto_commit;
 
 my @argv = @ARGV;
 
