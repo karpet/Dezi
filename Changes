@@ -1,5 +1,9 @@
 Revision history for Dezi
 
+0.004002 30 April 2015
+ - fix bin/dezi --auto-commit logic to default to undef so that the
+   Engine config can be set via config file.
+
 0.004001 1 Sept 2014
  - allow for fully-qualified URLs in search_path, index_path, etc.
  - require SWISH::3 to (hopefully) solve some failing Moose constraints

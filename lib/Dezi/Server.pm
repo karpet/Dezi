@@ -7,7 +7,7 @@ use Dezi::Server::About;
 use Dezi::Config;
 use Scalar::Util qw( blessed );
 
-our $VERSION = '0.004001';
+our $VERSION = '0.004002';
 
 sub app {
     my ( $class, $config ) = @_;
