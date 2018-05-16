@@ -7,3 +7,6 @@ perl:
   - "5.20"
 install:
   - cpanm --no-skip-satisfied Search::OpenSearch::Engine::Lucy Search::OpenSearch::Server || { cat ~/.cpanm/build.log ; false ; }
+  - cpanm --no-skip-satisfied Plack::Middleware::ReverseProxy || { cat ~/.cpanm/build.log ; false ; }
+  - cpanm --no-skip-satisfied Plack::Middleware::Auth::Basic || { cat ~/.cpanm/build.log ; false ; }
+  - cpanm --no-skip-satisfied Search::Tools Search::Query::Dialect::Lucy || { cat ~/.cpanm/build.log ; false ; }
