@@ -211,7 +211,7 @@ L<http://search.cpan.org/dist/Dezi/>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2011 Peter Karman.
+Copyright 2011-2018 Peter Karman.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published

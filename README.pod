@@ -44,7 +44,7 @@ You can also look for information at:
 
 =head2 COPYRIGHT AND LICENCE
 
-Copyright (C) 2011 Peter Karman
+Copyright (C) 2011-2018 Peter Karman
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
