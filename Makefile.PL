@@ -26,7 +26,7 @@ requires 'Plack::Middleware::Auth::Basic'   => 0;
 recommends 'LucyX::Suggester' => '0.003';
 
 perl_version '5.8.3';
-license 'perl';
+license 'Perl_5';
 homepage 'https://github.com/karpet/Dezi';
 bugtracker 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=Dezi';
 repository 'http://github.com/karpet/Dezi';
