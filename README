@@ -1,9 +1,17 @@
-Dezi
+=head1 Dezi
 
 Dezi is a search platform based on Apache Lucy, Swish3, Plack and Search::OpenSearch.
 Dezi integrates several search toolkits into an easy-to-use server.
 
-INSTALLATION
+=begin html
+
+<p>
+  <img src="https://travis-ci.org/karpet/Dezi.png?branch=master" alt="Travis CI build status">
+</p>
+
+=end html
+
+=head2 INSTALLATION
 
 To install this module, run the following commands:
 
@@ -12,7 +20,7 @@ To install this module, run the following commands:
 	make test
 	make install
 
-SUPPORT AND DOCUMENTATION
+=head2 SUPPORT AND DOCUMENTATION
 
 After installing, you can find documentation for this module with the
 perldoc command.
@@ -34,7 +42,7 @@ You can also look for information at:
         http://search.cpan.org/dist/Dezi/
 
 
-COPYRIGHT AND LICENCE
+=head2 COPYRIGHT AND LICENCE
 
 Copyright (C) 2011 Peter Karman
 
