@@ -6,7 +6,7 @@ use JSON;
 use Search::Tools::XML;
 use Scalar::Util qw( blessed );
 
-our $VERSION = '0.004002';
+our $VERSION = '0.004003';
 
 sub new {
     my $class       = shift;
