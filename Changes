@@ -1,5 +1,8 @@
 Revision history for Dezi
 
+0.004003 15 May 2018
+ - fix pod bugs in Dezi::Config
+
 0.004002 30 April 2015
  - fix bin/dezi --auto-commit logic to default to undef so that the
    Engine config can be set via config file.
